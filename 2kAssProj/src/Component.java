@@ -1,11 +1,21 @@
 public class Component {
-boolean FireEvent(Event e)
+    public Entity self;
+    public Component(Entity ent)
+    {
+        self = ent;
+    }
+public void FireEvent(Event e)
 {
-return true;
+
+}
+
+public void TargetedEventSend(Entity ent)
+{
+
 }
 
 public void Behaviour(Event e)
 {
-    
+
 }
 }

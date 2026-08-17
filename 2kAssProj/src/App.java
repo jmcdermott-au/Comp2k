@@ -3,14 +3,13 @@ public class App {
         Entity ent1 = new Entity();
         Entity ent2 = new Entity();
 
-        ent1.components.add(new TestComponent());
-        ent2.components.add(new TestComponent());
+        ent1.components.add(new TestComponent(ent1));
+        ent2.components.add(new TestComponent(ent2));
+        ent1.components.add(new TestChangerComponent(ent1));
 
-        Event testEv = new Event();
-        testEv.ID = "TestEvent";
-        testEv.Parameters.put("health", 15);
-        ent2.SendEvent(testEv);
         
+        ent1.components.get(0).TargetedEventSend(ent2);
         
+
     }
 }
