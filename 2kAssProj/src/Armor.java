@@ -7,7 +7,7 @@ public class Armor extends Component{
     private int damageMitigation = 5;
     @Override
     public void Behaviour(Event e) {
-        if(e.ID.equals("TakeDamage"))
+        if(e.ID.equals("Defences"))
         {
             Object obj = e.Parameters.get("amount");
             if(obj instanceof Integer number)

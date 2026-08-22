@@ -4,8 +4,7 @@ public class Physical extends Component{
         super(ent);
     }
 
-    private int weight;
-    private int temperature;
+    
     private int health;
 
     @Override
@@ -31,13 +30,15 @@ public class Physical extends Component{
 
         if(e.ID.equals("TakeDamage"))
         {
-            Object obj = e.Parameters.get("amount");
-            if(obj instanceof Integer number)
-            {
-                Event e1 = new Event();
+            //bullshit to avoid having to order components
+            Event e1 = new Event();
                 e1.ID = "Defences";
                 e1.Parameters = e.Parameters;
                 self.SendEvent(e1);
+
+            Object obj = e1.Parameters.get("amount");
+            if(obj instanceof Integer number)
+            { 
                 System.out.println(health);
                 health -= number;
                 System.out.println(health);

@@ -17,6 +17,7 @@ public class Weapon extends Component{
                 {
                     tempAmount = 0;
                 }
+                System.out.println("Weapon: " + number + ", " + tempAmount);
                 e.Parameters.put("amount", tempAmount);
             }
             
