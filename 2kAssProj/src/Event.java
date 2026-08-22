@@ -4,7 +4,7 @@ String ID;
 LinkedHashMap<String, Object> Parameters; 
 public Event()
 {
-    Parameters = new LinkedHashMap<String, Object>();
+    Parameters = new LinkedHashMap<>();
 }
 
 }

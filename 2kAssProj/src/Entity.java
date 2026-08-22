@@ -13,7 +13,7 @@ return true;
 }
 public Entity()
 {
-    components = new ArrayList<Component>();
+    components = new ArrayList<>();
     
 }
 }
