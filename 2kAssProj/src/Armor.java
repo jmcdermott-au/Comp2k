@@ -3,8 +3,15 @@ public class Armor extends Component{
     public Armor(Entity ent) {
         super(ent);
     }
+    public Armor(Entity ent, int mit, String nam)
+    {
+        super(ent);
+        damageMitigation = mit;
+        name = nam;
+    }
 
     private int damageMitigation = 5;
+    private String name;
     @Override
     public void Behaviour(Event e) {
         if(e.ID.equals("Defences"))
@@ -17,6 +24,7 @@ public class Armor extends Component{
                 {
                     tempAmount = 0;
                 }
+                System.out.println("armor: " + number + ", " + tempAmount);
                 e.Parameters.put("amount", tempAmount);
             }
             

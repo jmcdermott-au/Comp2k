@@ -24,6 +24,11 @@ public class Limb extends Component{
             }
         }
 
+        if(e.ID.equals("Defences"))
+        {
+            System.out.println("limb recieved Defences event");
+            Equipped.SendEvent(e);
+        }
         if(e.ID.equals("attackWithLimb"))
         {
         
@@ -42,10 +47,6 @@ public class Limb extends Component{
                     
                     Equipped.SendEvent(e1);
                 }
-                
-                
-                
-            
         }
     }
 

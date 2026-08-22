@@ -4,7 +4,15 @@ public class Weapon extends Component{
         super(ent);
     }
 
-     private int wepDamage = 5;
+    public Weapon(Entity ent, int dmg, String nam)
+    {
+        super(ent);
+        wepDamage = dmg;
+        name = nam;
+    }
+
+    private int wepDamage = 5;
+    private String name = "default";
     @Override
     public void Behaviour(Event e) {
         if(e.ID.equals("DealingDamage"))
