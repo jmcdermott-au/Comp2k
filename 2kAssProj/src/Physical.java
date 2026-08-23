@@ -36,6 +36,7 @@ public class Physical extends Component{
                 e1.Parameters = e.Parameters;
                 self.SendEvent(e1);
 
+            /* 
             Object obj = e1.Parameters.get("amount");
             if(obj instanceof Integer number)
             { 
@@ -43,7 +44,11 @@ public class Physical extends Component{
                 health -= number;
                 System.out.println(health);
             }
-            
+            */
+            System.out.println("PHYSICAL: " + health);
+            Integer number = e.getParameter("amount", Integer.class);
+            health -= number;
+            System.out.println("PHYSICAL: " +health);
         }
     }
 }
