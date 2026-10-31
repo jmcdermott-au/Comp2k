@@ -1,5 +1,6 @@
 public class Component {
     public Entity self;
+    protected boolean debug = true;
     public Component(Entity ent)
     {
         self = ent;
