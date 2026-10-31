@@ -34,6 +34,14 @@ public class Eater extends Component{
                 System.out.println("DEBUG: Sat after: " + satiety );
             }
         }
+        if(e.ID.equals("AteRottenFood"))
+        {
+            Event e1 = new Event();
+            e1.ID = "TakeDamage";
+            e1.Parameters.put("amount", 5);
+            e1.Parameters.put("type", "poison");
+            self.SendEvent(e1);
+        }
     }
 
     public int getSatiety() {

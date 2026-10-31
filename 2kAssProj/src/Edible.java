@@ -12,8 +12,8 @@ public class Edible extends Component{
     private int calBaseVal = 10;
     
     private boolean doSatMultiplier = true;
-
-    
+    private int rot;
+    private int rotThreshold; 
 
     public int getCaloricValue() {
         Random rand = new Random();
@@ -32,6 +32,14 @@ public class Edible extends Component{
                 Integer sat = e.getParameter("satiety", Integer.class);
                 caloricValue = sat * calBaseVal;
             }
+
+            if(rot > rotThreshold)
+            {
+               Entity eater = e.getParameter("eater", Entity.class);
+               Event e1 = new Event();
+               e1.ID = "AteRottenFood";
+               eater.SendEvent(e1);
+            }
         }
 
         /* 
@@ -42,6 +50,14 @@ public class Edible extends Component{
                 //Eater.send(): "YouCanEatMe": caloricValue 
         }
         */
+    }
+
+    public int getRot() {
+        return rot;
+    }
+
+    private void setRot(int rot) {
+        this.rot = rot;
     }
 
     
