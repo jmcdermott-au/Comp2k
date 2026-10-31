@@ -6,23 +6,21 @@ import java.awt.*; // Using AWT's Graphics and Color
  */
 public class Renderable extends Component {
     // Variables (package access)
-    int x, y, width, height; // Use a rectangle for illustration
+    
     Color color = Color.RED; // Color of the object
-
+    int width, height = 16;
     // Constructor
-    public Renderable(Entity ent, int x, int y, int width, int height, Color color) {
+    public Renderable(Entity ent, int width, int height, Color color) {
 
         super(ent);
-        this.x = x;
-        this.y = y;
+        this.color = color;
         this.width = width;
         this.height = height;
-        this.color = color;
     }
 
-    // Paint itself given the Graphics context
-    public void paint(Graphics g) {
+    // Paint itself given the Graphics conte
+    public void paint(Graphics g, int screenX, int screenY) {
         g.setColor(color);
-        g.fillRect(x, y, width, height); // Fill a rectangle
+        g.fillRect(screenX, screenY, width, height);
     }
 }
