@@ -23,12 +23,8 @@ public class CGMoveASprite extends JFrame {
             public void keyPressed(KeyEvent e) {
              if (e.getKeyCode() == KeyEvent.VK_SPACE) 
                 {
-                    Event tick = new Event();
-                    tick.ID = "TickUpdate";
-                    for(Entity ent : entityList)
-                    {
-                        ent.SendEvent(tick);
-                    }
+                    System.out.println("tick UPDATE!");
+                    runGameTick();
                 }
             }
         });
@@ -41,8 +37,18 @@ public class CGMoveASprite extends JFrame {
         requestFocusInWindow();
     }
 
-    
+    private void runGameTick() {
+        Event tick = new Event();
+        tick.ID = "TickUpdate";
 
+        for (Entity entity : entityList) {
+            entity.SendEvent(tick);
+        }
+
+        canvas.repaint();
+    }
+
+    
     private class DrawCanvas extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {

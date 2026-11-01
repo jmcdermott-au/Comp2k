@@ -1,3 +1,6 @@
+
+
+
 public class cPosition extends Component {
     private int x;
     private int y;
@@ -15,4 +18,15 @@ public class cPosition extends Component {
         x += dx;
         y += dy;
     }
+
+    @Override
+    public void Behaviour(Event e) {
+        if(e.ID.equals("TickUpdate"))
+        {
+            
+            moveBy(1,1);
+        }
+    }
+
+    
 }
