@@ -23,9 +23,10 @@ public class App {
          entityList.add(ent1);
         
          ent1.components.add(new cPosition(ent1, 1, 1));
-         ent1.components.add(new Renderable(ent1, 16, 16, Color.RED));
-         ent2.components.add(new cPosition(ent2, 3, 3));
-         ent2.components.add(new Renderable(ent2, 16, 16, Color.BLUE));
+         ent1.components.add(new Renderable(ent1, 16, 16, Color.BLUE));
+         ent1.components.add(new Vision(ent1, entityList, 100));
+         ent2.components.add(new cPosition(ent2, 5, 5));
+         ent2.components.add(new Renderable(ent2, 16, 16, Color.RED));
          
          ent1.components.add(new Vision(ent1, entityList, 3));
          render = new CGMoveASprite(entityList);
@@ -36,10 +37,7 @@ public class App {
           ent2.components.add(c2);
           
 
-          Event e = new Event();
-          e.Parameters.put("FoodName", c2);
-          e.ID = "EatThis";
-          ent1.SendEvent(e);
+          
 
        
     }

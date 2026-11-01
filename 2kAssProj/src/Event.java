@@ -7,6 +7,11 @@ public Event()
     Parameters = new LinkedHashMap<>();
 }
 
+public void Debug()
+{
+    Parameters.forEach((key, value) -> System.out.println(key + " : " + value));
+}
+
 @SuppressWarnings("unchecked")
 public <T> T getParameter(String key, Class<T> type) {
     Object obj = Parameters.get(key);

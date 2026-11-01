@@ -24,7 +24,14 @@ public class cPosition extends Component {
         if(e.ID.equals("TickUpdate"))
         {
             
-            moveBy(1,1);
+            //moveBy(1,1);
+        }
+        if(e.ID.equals("IwannaMoveHere"))
+        {
+            cPosition loc = e.getParameter("location", cPosition.class);
+            int toMoveX =  Math.clamp(x - loc.getX(), -1, 1) * -1;
+            int toMoveY =  Math.clamp(y - loc.getY(), -1, 1) * -1;
+            moveBy(toMoveX, toMoveY);
         }
     }
 

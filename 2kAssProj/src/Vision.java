@@ -11,6 +11,34 @@ public class Vision extends Component {
         this.range = range;
     }
 
+    @Override
+    public void Behaviour(Event e) {
+        if(e.ID.equals("seeFoodReq"))
+        {
+            Event e1 = new Event();
+            e1.ID = "seeFoodResponse";
+            List<Entity> edibles = new ArrayList<>();
+            for (Entity entity : getVisibleEntities()) 
+                {
+                Edible ed = null;
+
+                for (Component component : entity.components) 
+                    {
+                        if (component instanceof Edible edd) 
+                            {
+                                ed = edd;
+                                edibles.add(ed.self);
+                            }
+                    }
+                }
+            e1.Parameters.put("edibles", edibles);
+            self.SendEvent(e1);
+        }
+    }
+
+
+
+     
     public List<Entity> getVisibleEntities() {
         List<Entity> visible = new ArrayList<>();
         cPosition observerPosition = findPosition(self);

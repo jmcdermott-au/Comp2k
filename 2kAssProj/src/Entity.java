@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 
 public class Entity {
@@ -15,5 +14,13 @@ public Entity()
 {
     components = new ArrayList<>();
     
+}
+public <T extends Component> T getComponent(Class<T> type) {
+    for (Component component : components) {
+        if (type.isInstance(component)) {
+            return type.cast(component);
+        }
+    }
+    return null;
 }
 }

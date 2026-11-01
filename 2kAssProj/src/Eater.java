@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Eater extends Component{
 
     public Eater(Entity ent) {
@@ -7,10 +9,56 @@ public class Eater extends Component{
     private int satiety = 3;
     private int capacity = 100;
     private int baselineAfterTooMuch = 90;
+    private int apetite = 10;
 
     @Override 
     public void Behaviour(Event e)
     {
+
+        if(e.ID.equals("TickUpdate"))
+        {
+            if(satiety < apetite)
+            {
+                Event seeFoodReq = new Event();
+                seeFoodReq.ID = "seeFoodReq";
+                self.SendEvent(seeFoodReq);
+            }
+        }
+        if(e.ID.equals("seeFoodResponse"))
+        {
+            
+            List<?> edibles = e.getParameter("edibles", List.class);
+            if (edibles == null) {
+                throw new IllegalArgumentException(
+                    "'edibles' must be a list"
+                );
+            }
+
+            Entity firstEdible = null;
+            for (Object item : edibles) {
+                if (item instanceof Entity entity) {
+                    firstEdible = entity;
+                    break;
+                }
+            }
+
+            if (firstEdible == null) {
+                return; // No Entity was found in the list.
+            }
+
+            cPosition ediblePos = firstEdible.getComponent(cPosition.class);
+            if (ediblePos == null) {
+                return; // The selected entity has no position.
+            }
+
+            Event movE = new Event();
+            movE.ID = "IwannaMoveHere";
+            movE.Parameters.put("location", ediblePos);
+            movE.Debug();
+            self.SendEvent(movE);
+
+            
+        }
         if(e.ID.equals("EatThis"))
         {
             if(debug)
