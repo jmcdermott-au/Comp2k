@@ -10,13 +10,27 @@ public class Eater extends Component{
     private int capacity = 100;
     private int baselineAfterTooMuch = 90;
     private int apetite = 10;
+    private int metabolism = 1;
+    private int metabolicRate = 3;
+    private int metabolicCount = 0;
 
+
+    private void DoMetabolism()
+    {
+        if(metabolicCount < metabolicRate)
+        {
+            metabolicCount++;
+            return;
+        }
+            setSatiety(satiety - metabolism);
+    }
     @Override 
     public void Behaviour(Event e)
     {
 
         if(e.ID.equals("TickUpdate"))
         {
+            DoMetabolism();
             if(satiety < apetite)
             {
                 Event seeFoodReq = new Event();
@@ -121,6 +135,16 @@ public class Eater extends Component{
             self.SendEvent(e2);
 
             
+        }
+        if(satiety < 0)
+        {
+            Event e1 = new Event();
+            e1.ID = "Starving";
+            self.SendEvent(e1);
+            Event e2 = new Event();
+            e2.ID = "TakeDamage";
+            e2.Parameters.put("amount", 5);
+            self.SendEvent(e2);
         }
     }
 

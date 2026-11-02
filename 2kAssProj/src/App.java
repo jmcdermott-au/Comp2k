@@ -18,8 +18,8 @@ public class App {
         CGMoveASprite render = new CGMoveASprite(world);
         EntityFactory entityFactory = new EntityFactory(world);
         world.spawn(entityFactory.create(EntityFactory.Type.BLUE_CREATURE, rand.nextInt(50), rand.nextInt(50)));
-        for (int i = 0; i < 10; i++) {
-            world.spawn(entityFactory.create(EntityFactory.Type.FOOD, rand.nextInt(50), rand.nextInt(50)));
+        for (int i = 0; i < 3; i++) {
+            world.spawn(entityFactory.create(EntityFactory.Type.FLOWER, rand.nextInt(50), rand.nextInt(50)));
         }
         
 

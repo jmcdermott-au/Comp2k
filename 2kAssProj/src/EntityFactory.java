@@ -4,7 +4,8 @@ import java.util.Objects;
 public class EntityFactory {
     public enum Type {
         BLUE_CREATURE,
-        FOOD
+        FOOD,
+        FLOWER
     }
 
     private final GameWorld world;
@@ -21,12 +22,17 @@ public class EntityFactory {
             case BLUE_CREATURE -> {
                 entity.components.add(new Physical(entity));
                 entity.components.add(new Renderable(entity, 16, 16, Color.BLUE));
-                entity.components.add(new Vision(entity, world, 10));
+                entity.components.add(new Vision(entity, world, 100));
                 entity.components.add(new Eater(entity));
             }
             case FOOD -> {
                 entity.components.add(new Renderable(entity, 16, 16, Color.RED));
                 entity.components.add(new Edible(entity, world));
+            }
+            case FLOWER -> {
+                entity.components.add(new Physical(entity));
+                entity.components.add(new Renderable(entity, 16, 16, Color.GREEN));
+                entity.components.add(new Flower(entity, world, this));
             }
         }
 

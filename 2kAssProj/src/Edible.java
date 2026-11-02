@@ -10,9 +10,6 @@ public class Edible extends Component{
         this.world = world;
     }
 
-    public Edible(Entity ent) {
-        super(ent);
-    }
 
     
     private int caloricValue;
