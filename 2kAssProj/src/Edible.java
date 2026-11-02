@@ -24,6 +24,10 @@ public class Edible extends Component{
         return caloricValue;
     }
 
+    public boolean isConsumed() {
+        return consumed;
+    }
+
     @Override 
     public void Behaviour(Event e)
     {

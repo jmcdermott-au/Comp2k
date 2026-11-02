@@ -1,5 +1,3 @@
-import java.util.List;
-
 public class Eater extends Component{
 
     public Eater(Entity ent) {
@@ -28,90 +26,38 @@ public class Eater extends Component{
     @Override 
     public void Behaviour(Event e)
     {
-
         if(e.ID.equals("TickUpdate"))
         {
             DoMetabolism();
-            if(satiety < apetite)
-            {
-                Event seeFoodReq = new Event();
-                seeFoodReq.ID = "seeFoodReq";
-                self.SendEvent(seeFoodReq);
-            }
         }
-        if(e.ID.equals("seeFoodResponse"))
+
+        if (e.ID.equals("PursueFood"))
         {
-            
-            List<?> edibles = e.getParameter("edibles", List.class);
-            if (edibles == null) {
-                throw new IllegalArgumentException(
-                    "'edibles' must be a list"
-                );
-            }
-
+            Entity food = e.getParameter("food", Entity.class);
             cPosition myPos = self.getComponent(cPosition.class);
-            if (myPos == null) {
+            cPosition foodPosition = food == null
+                    ? null
+                    : food.getComponent(cPosition.class);
+            Edible edible = food == null ? null : food.getComponent(Edible.class);
+            if (myPos == null || foodPosition == null || edible == null
+                    || edible.isConsumed()) {
                 return;
             }
 
-            Entity closestEdible = null;
-            cPosition closestPosition = null;
-            double closestDistanceSquared = Double.POSITIVE_INFINITY;
-            for (Object item : edibles) {
-                if (item instanceof Entity entity) {
-                    cPosition position = entity.getComponent(cPosition.class);
-                    if (position == null || entity.getComponent(Edible.class) == null) {
-                        continue;
-                    }
-
-                    long dx = (long) position.getX() - myPos.getX();
-                    long dy = (long) position.getY() - myPos.getY();
-                    double distanceSquared = (double) dx * dx + (double) dy * dy;
-                    if (distanceSquared < closestDistanceSquared) {
-                        closestEdible = entity;
-                        closestPosition = position;
-                        closestDistanceSquared = distanceSquared;
-                    }
-                }
-            }
-
-            if (closestEdible == null) {
-                return;
-            }
-
-            if(myPos.getX() == closestPosition.getX() && myPos.getY() == closestPosition.getY())
+            if(myPos.getX() == foodPosition.getX() && myPos.getY() == foodPosition.getY())
             {
-                //eat that fucking thing
-                if(debug)
-            {
-                System.out.println("DEBUG: Sat before: " + satiety );
+                Event eat = new Event("ImEatingYou");
+                eat.Parameters.put("eater", self);
+                eat.Parameters.put("satiety", satiety);
+                food.SendEvent(eat);
+                setSatiety(satiety + edible.getCaloricValue());
             }
-            
-            
-            Event e2 = new Event();
-            e2.ID = "ImEatingYou";
-            e2.Parameters.put("eater", self);
-            e2.Parameters.put("satiety", satiety);
-            
-            closestEdible.SendEvent(e2);
-            setSatiety(satiety + closestEdible.getComponent(Edible.class).getCaloricValue());
-            
-            
-            if(debug)
-            {
-                System.out.println("DEBUG: Sat after: " + satiety );
-            }
-                
-            }
-            
-            Event movE = new Event();
-            movE.ID = "IwannaMoveHere";
-            movE.Parameters.put("location", closestPosition);
-            movE.Debug();
-            self.SendEvent(movE);
 
-            
+            Event move = new Event("IwannaMoveHere");
+            move.Parameters.put("location", foodPosition);
+            self.SendEvent(move);
         }
+
         if(e.ID.equals("EatThis"))
         {
             
@@ -124,6 +70,49 @@ public class Eater extends Component{
             e1.Parameters.put("type", "poison");
             self.SendEvent(e1);
         }
+    }
+
+    @Override
+    public void proposeGoals(Brain brain) {
+        if (satiety >= apetite) {
+            return;
+        }
+
+        Vision vision = self.getComponent(Vision.class);
+        cPosition myPos = self.getComponent(cPosition.class);
+        if (vision == null || myPos == null) {
+            return;
+        }
+
+        Entity closestFood = null;
+        double closestDistanceSquared = Double.POSITIVE_INFINITY;
+        for (Entity entity : vision.getVisibleEntities()) {
+            Edible edible = entity.getComponent(Edible.class);
+            if (edible == null || edible.isConsumed()) {
+                continue;
+            }
+
+            cPosition position = entity.getComponent(cPosition.class);
+            if (position == null) {
+                continue;
+            }
+
+            double dx = (double) position.getX() - myPos.getX();
+            double dy = (double) position.getY() - myPos.getY();
+            double distanceSquared = dx * dx + dy * dy;
+            if (distanceSquared < closestDistanceSquared) {
+                closestFood = entity;
+                closestDistanceSquared = distanceSquared;
+            }
+        }
+
+        if (closestFood == null) {
+            return;
+        }
+
+        Event pursueFood = new Event("PursueFood");
+        pursueFood.Parameters.put("food", closestFood);
+        brain.proposeGoal("eat", 100 - satiety, pursueFood);
     }
 
     public int getSatiety() {

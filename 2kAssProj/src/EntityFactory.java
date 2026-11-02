@@ -27,6 +27,7 @@ public class EntityFactory {
                 entity.components.add(new Renderable(entity, 16, 16, Color.BLUE));
                 entity.components.add(new Vision(entity, world, 100));
                 entity.components.add(new Eater(entity));
+                entity.components.add(new Brain(entity));
             }
             case FOOD -> {
                 entity.components.add(new Renderable(entity, 16, 16, Color.RED));
@@ -43,11 +44,13 @@ public class EntityFactory {
                 entity.components.add(new Renderable(entity, 16, 16, Color.BLACK));
                 entity.components.add(new Vision(entity, world, 100));
                 entity.components.add(new ScaredBrain(entity));
+                entity.components.add(new Brain(entity));
             }
             case ANT -> {
                 entity.components.add(new Physical(entity));
                 entity.components.add(new Renderable(entity, 16, 16, Color.DARK_GRAY));
-                entity.components.add(new AntBrain(entity, x, y));
+                entity.components.add(new AntBrain(entity, x, y, world, this));
+                entity.components.add(new Brain(entity));
             }
             case ANT_HILL -> {
                 entity.components.add(new Physical(entity));
