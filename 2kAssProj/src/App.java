@@ -17,7 +17,7 @@ public class App {
           
           Entity ent2 = new Entity();
         
-          ArrayList<Entity> entityList = new ArrayList<>();
+         GameWorld world = new GameWorld();
 
          entityList.add(ent2);
          entityList.add(ent1);

@@ -26,7 +26,7 @@ public class cPosition extends Component {
             
             //moveBy(1,1);
         }
-        if(e.ID.equals("IwannaMoveHere"))
+        if(e.ID.equals("IwannaMoveHere")) 
         {
             cPosition loc = e.getParameter("location", cPosition.class);
             int toMoveX =  Math.clamp(x - loc.getX(), -1, 1) * -1;

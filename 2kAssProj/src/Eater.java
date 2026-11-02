@@ -51,6 +51,31 @@ public class Eater extends Component{
                 return; // The selected entity has no position.
             }
 
+            cPosition myPos = self.getComponent(cPosition.class);
+            if(myPos.getX() == ediblePos.getX() && myPos.getY() == ediblePos.getY())
+            {
+                //eat that fucking thing
+                if(debug)
+            {
+                System.out.println("DEBUG: Sat before: " + satiety );
+            }
+            
+            
+            Event e2 = new Event();
+            e2.ID = "ImEatingYou";
+            e2.Parameters.put("eater", self);
+            e2.Parameters.put("satiety", satiety);
+            
+            firstEdible.SendEvent(e2);
+            setSatiety(firstEdible.getComponent(Edible.class).getCaloricValue());
+            
+            if(debug)
+            {
+                System.out.println("DEBUG: Sat after: " + satiety );
+            }
+                
+            }
+            
             Event movE = new Event();
             movE.ID = "IwannaMoveHere";
             movE.Parameters.put("location", ediblePos);
@@ -61,26 +86,7 @@ public class Eater extends Component{
         }
         if(e.ID.equals("EatThis"))
         {
-            if(debug)
-            {
-                System.out.println("DEBUG: Sat before: " + satiety );
-            }
             
-            
-            Edible food = e.getParameter("FoodName", Edible.class);
-            
-            Event e2 = new Event();
-            e2.ID = "ImEatingYou";
-            e2.Parameters.put("eater", self);
-            e2.Parameters.put("satiety", satiety);
-            
-            food.self.SendEvent(e2);
-            setSatiety(food.getCaloricValue());
-            
-            if(debug)
-            {
-                System.out.println("DEBUG: Sat after: " + satiety );
-            }
         }
         if(e.ID.equals("AteRottenFood"))
         {

@@ -2,13 +2,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Vision extends Component {
-    private final List<Entity> entities;
+    private final GameWorld world;
     private final double range;
 
-    public Vision(Entity self, List<Entity> entities, double range) {
+    public Vision(Entity self, GameWorld wld, double range) {
         super(self);
-        this.entities = entities;
         this.range = range;
+        this.world = wld;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class Vision extends Component {
 
         double rangeSquared = range * range;
 
-        for (Entity other : entities) {
+        for (Entity other : world.getEntities()) {
             if (other == self) {
                 continue;
             }

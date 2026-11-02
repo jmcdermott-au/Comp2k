@@ -1,17 +1,16 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import javax.swing.*;
 
 public class CGMoveASprite extends JFrame {
     private static final int TILE_SIZE = 16;
 
-    private final ArrayList<Entity> entityList;
+    
     private final DrawCanvas canvas = new DrawCanvas();
-    private int selectedIndex;
+    private final GameWorld world;
 
-    public CGMoveASprite(ArrayList<Entity> entities) {
-        entityList = entities;
+    public CGMoveASprite(GameWorld wld) {
+        world = wld;
 
         canvas.setPreferredSize(new Dimension(800, 800));
 
@@ -38,12 +37,7 @@ public class CGMoveASprite extends JFrame {
     }
 
     private void runGameTick() {
-        Event tick = new Event();
-        tick.ID = "TickUpdate";
-
-        for (Entity entity : entityList) {
-            entity.SendEvent(tick);
-        }
+        world.tick();
 
         canvas.repaint();
     }
@@ -55,7 +49,7 @@ public class CGMoveASprite extends JFrame {
             super.paintComponent(g);
             setBackground(Color.CYAN);
 
-            for (Entity entity : entityList) {
+            for (Entity entity : world.getEntities()) {
                 cPosition position = null;
                 Renderable renderable = null;
 

@@ -6,6 +6,11 @@ public Event()
 {
     Parameters = new LinkedHashMap<>();
 }
+public Event(String ID)
+{
+    Parameters = new LinkedHashMap<>();
+    this.ID = ID;
+}
 
 public void Debug()
 {
