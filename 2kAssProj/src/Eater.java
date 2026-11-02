@@ -69,6 +69,7 @@ public class Eater extends Component{
             firstEdible.SendEvent(e2);
             setSatiety(firstEdible.getComponent(Edible.class).getCaloricValue());
             
+            
             if(debug)
             {
                 System.out.println("DEBUG: Sat after: " + satiety );

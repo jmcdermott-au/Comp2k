@@ -1,5 +1,6 @@
-import java.awt.Color;
-import java.util.ArrayList;
+
+import java.util.Random;
+
 
 
 
@@ -10,31 +11,21 @@ public class App {
 
         
         
+        Random rand = new Random();
         
-        CGMoveASprite render;
-            
-          Entity ent1 = new Entity();
-          
-          Entity ent2 = new Entity();
+       
+        GameWorld world = new GameWorld();
+        CGMoveASprite render = new CGMoveASprite(world);
+        EntityFactory entityFactory = new EntityFactory(world);
+        world.spawn(entityFactory.create(EntityFactory.Type.BLUE_CREATURE, rand.nextInt(50), rand.nextInt(50)));
+        for (int i = 0; i < 10; i++) {
+            world.spawn(entityFactory.create(EntityFactory.Type.FOOD, rand.nextInt(50), rand.nextInt(50)));
+        }
         
-         GameWorld world = new GameWorld();
 
-         entityList.add(ent2);
-         entityList.add(ent1);
+       
         
-         ent1.components.add(new cPosition(ent1, 1, 1));
-         ent1.components.add(new Renderable(ent1, 16, 16, Color.BLUE));
-         ent1.components.add(new Vision(ent1, entityList, 100));
-         ent2.components.add(new cPosition(ent2, 5, 5));
-         ent2.components.add(new Renderable(ent2, 16, 16, Color.RED));
-         
-         ent1.components.add(new Vision(ent1, entityList, 3));
-         render = new CGMoveASprite(entityList);
-
-          Component c1 = new Eater(ent1);
-          Component c2 = new Edible(ent2);
-          ent1.components.add(c1);
-          ent2.components.add(c2);
+        
           
 
           

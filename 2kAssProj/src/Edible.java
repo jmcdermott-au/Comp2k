@@ -1,7 +1,14 @@
-
 import java.util.Random;
 
 public class Edible extends Component{
+
+    private final GameWorld world;
+    private boolean consumed;
+
+    public Edible(Entity entity, GameWorld world) {
+        super(entity);
+        this.world = world;
+    }
 
     public Edible(Entity ent) {
         super(ent);
@@ -24,32 +31,19 @@ public class Edible extends Component{
     @Override 
     public void Behaviour(Event e)
     {
-        if(e.ID.equals("ImEatingYou"))
-        {
-           
-            if(doSatMultiplier)
-            {
-                Integer sat = e.getParameter("satiety", Integer.class);
-                caloricValue = sat * calBaseVal;
-            }
-
-            if(rot > rotThreshold)
-            {
-               Entity eater = e.getParameter("eater", Entity.class);
-               Event e1 = new Event();
-               e1.ID = "AteRottenFood";
-               eater.SendEvent(e1);
-            }
+        if (!e.ID.equals("ImEatingYou") || consumed) {
+            return;
         }
 
-        /* 
-        if(e.ID.equals("IWantToEatYou"))
-        {
-            //Something wants to eat me. 
-            //If they can: 
-                //Eater.send(): "YouCanEatMe": caloricValue 
+        consumed = true;
+
+        // Apply the food's effects here, such as notifying the eater if it's rotten.
+        Entity eater = e.getParameter("eater", Entity.class);
+        if (rot > rotThreshold && eater != null) {
+            eater.SendEvent(new Event("AteRottenFood"));
         }
-        */
+
+        world.despawn(self);
     }
 
     public int getRot() {
