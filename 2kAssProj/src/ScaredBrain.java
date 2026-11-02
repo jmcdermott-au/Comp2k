@@ -15,7 +15,7 @@ public class ScaredBrain extends Component{
             
             Event e1 = new Event();
             e1.ID = "IwannaGraze";
-            e1.Parameters.put("speed", 1);
+            e1.Parameters.put("speed", 3);
             self.SendEvent(e1);
             
 

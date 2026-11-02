@@ -1,4 +1,3 @@
-import java.util.Random;
 
 public class Edible extends Component{
 
@@ -20,7 +19,7 @@ public class Edible extends Component{
     private int rotThreshold; 
 
     public int getCaloricValue() {
-        Random rand = new Random();
+        
         
         return caloricValue;
     }
