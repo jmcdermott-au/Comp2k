@@ -5,7 +5,8 @@ public class EntityFactory {
     public enum Type {
         BLUE_CREATURE,
         FOOD,
-        FLOWER
+        FLOWER,
+        HORSE
     }
 
     private final GameWorld world;
@@ -33,6 +34,12 @@ public class EntityFactory {
                 entity.components.add(new Physical(entity));
                 entity.components.add(new Renderable(entity, 16, 16, Color.GREEN));
                 entity.components.add(new Flower(entity, world, this));
+            }
+            case HORSE -> {
+                entity.components.add(new Physical(entity));
+                entity.components.add(new Renderable(entity, 16, 16, Color.BLACK));
+                entity.components.add(new Vision(entity, world, 100));
+                entity.components.add(new ScaredBrain(entity));
             }
         }
 

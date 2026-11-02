@@ -12,7 +12,7 @@ public class Edible extends Component{
 
 
     
-    private int caloricValue;
+    private int caloricValue = 10;
     private int calBaseVal = 10;
     
     private boolean doSatMultiplier = true;

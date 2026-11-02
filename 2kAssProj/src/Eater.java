@@ -6,10 +6,10 @@ public class Eater extends Component{
         super(ent);
     }
 
-    private int satiety = 3;
+    private int satiety = 100;
     private int capacity = 100;
     private int baselineAfterTooMuch = 90;
-    private int apetite = 10;
+    private int apetite = 50;
     private int metabolism = 1;
     private int metabolicRate = 3;
     private int metabolicCount = 0;
@@ -23,6 +23,7 @@ public class Eater extends Component{
             return;
         }
             setSatiety(satiety - metabolism);
+            metabolicCount = 0;
     }
     @Override 
     public void Behaviour(Event e)
@@ -48,25 +49,37 @@ public class Eater extends Component{
                 );
             }
 
-            Entity firstEdible = null;
+            cPosition myPos = self.getComponent(cPosition.class);
+            if (myPos == null) {
+                return;
+            }
+
+            Entity closestEdible = null;
+            cPosition closestPosition = null;
+            double closestDistanceSquared = Double.POSITIVE_INFINITY;
             for (Object item : edibles) {
                 if (item instanceof Entity entity) {
-                    firstEdible = entity;
-                    break;
+                    cPosition position = entity.getComponent(cPosition.class);
+                    if (position == null || entity.getComponent(Edible.class) == null) {
+                        continue;
+                    }
+
+                    long dx = (long) position.getX() - myPos.getX();
+                    long dy = (long) position.getY() - myPos.getY();
+                    double distanceSquared = (double) dx * dx + (double) dy * dy;
+                    if (distanceSquared < closestDistanceSquared) {
+                        closestEdible = entity;
+                        closestPosition = position;
+                        closestDistanceSquared = distanceSquared;
+                    }
                 }
             }
 
-            if (firstEdible == null) {
-                return; // No Entity was found in the list.
+            if (closestEdible == null) {
+                return;
             }
 
-            cPosition ediblePos = firstEdible.getComponent(cPosition.class);
-            if (ediblePos == null) {
-                return; // The selected entity has no position.
-            }
-
-            cPosition myPos = self.getComponent(cPosition.class);
-            if(myPos.getX() == ediblePos.getX() && myPos.getY() == ediblePos.getY())
+            if(myPos.getX() == closestPosition.getX() && myPos.getY() == closestPosition.getY())
             {
                 //eat that fucking thing
                 if(debug)
@@ -80,8 +93,8 @@ public class Eater extends Component{
             e2.Parameters.put("eater", self);
             e2.Parameters.put("satiety", satiety);
             
-            firstEdible.SendEvent(e2);
-            setSatiety(firstEdible.getComponent(Edible.class).getCaloricValue());
+            closestEdible.SendEvent(e2);
+            setSatiety(satiety + closestEdible.getComponent(Edible.class).getCaloricValue());
             
             
             if(debug)
@@ -93,7 +106,7 @@ public class Eater extends Component{
             
             Event movE = new Event();
             movE.ID = "IwannaMoveHere";
-            movE.Parameters.put("location", ediblePos);
+            movE.Parameters.put("location", closestPosition);
             movE.Debug();
             self.SendEvent(movE);
 

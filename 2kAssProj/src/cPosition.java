@@ -1,4 +1,7 @@
 
+import java.util.Random;
+
+
 
 
 public class cPosition extends Component {
@@ -32,6 +35,14 @@ public class cPosition extends Component {
             int toMoveX =  Math.clamp(x - loc.getX(), -1, 1) * -1;
             int toMoveY =  Math.clamp(y - loc.getY(), -1, 1) * -1;
             moveBy(toMoveX, toMoveY);
+        }
+        if(e.ID.equals("IwannaGraze"))
+        {
+            Random rand = new Random();
+            int spd = e.getParameter("speed", Integer.class);
+            int randomNumX = spd * rand.nextInt(1 - -1 + 1) - 1;
+            int randomNumY = spd * rand.nextInt(1- -1 + 1) - 1; 
+            moveBy(randomNumX, randomNumY);   
         }
     }
 
