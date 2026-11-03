@@ -25,13 +25,13 @@ public class Aggressive extends Component{
                 {
                     Event e1 = new Event("DealDamage");
                     e1.Parameters.put("target", nearest);
-                    brain.proposeGoal("hittem", 100, e1);
+                    brain.proposeGoal("hittem", 1, e1);
                 }
                 else
                 {
                     Event e2 = new Event("IwannaMoveHere");
                     e2.Parameters.put("location", nrPos);
-                    brain.proposeGoal("moveHere", 1000, e2);
+                    brain.proposeGoal("moveHere", 1, e2);
                     System.out.println("DEBUG");
                 }
             }

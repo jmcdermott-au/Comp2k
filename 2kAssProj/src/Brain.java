@@ -11,7 +11,7 @@ public class Brain extends Component {
     public Brain(Entity entity) {
         super(entity);
     }
-
+    
     public void proposeGoal(String id, double score, Event action) {
         Objects.requireNonNull(id, "Goal id cannot be null");
         Objects.requireNonNull(action, "Goal action cannot be null");
@@ -29,6 +29,7 @@ public class Brain extends Component {
         }
     }
 
+    // i don't like how the AI did this. Should use events!
     @Override
     public void Behaviour(Event e) {
         if (!e.ID.equals("TickUpdate")) {
@@ -38,7 +39,7 @@ public class Brain extends Component {
         proposedGoals.clear();
         for (Component component : self.components) {
             if (component != this) {
-                component.proposeGoals(this);
+                component.proposeGoals(this); //stupid - this block should be self.send(e1)
             }
         }
 

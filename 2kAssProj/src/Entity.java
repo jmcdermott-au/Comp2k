@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class Entity {
 public ArrayList<Component> components;
+private final GameWorld world;
 public boolean SendEvent(Event e)
 {
     for(Component cmp : components)
@@ -10,9 +11,10 @@ public boolean SendEvent(Event e)
     }
 return true;
 }
-public Entity()
+public Entity(GameWorld world)
 {
     components = new ArrayList<>();
+    this.world = world;
     
 }
 public <T extends Component> T getComponent(Class<T> type) {
@@ -23,4 +25,8 @@ public <T extends Component> T getComponent(Class<T> type) {
     }
     return null;
 }
+
+    public GameWorld getWorld() {
+        return world;
+    }
 }

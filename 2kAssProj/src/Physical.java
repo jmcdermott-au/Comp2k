@@ -45,6 +45,12 @@ public class Physical extends Component{
             System.out.println("PHYSICAL: " + health);
             Integer number = e.getParameter("amount", Integer.class);
             health -= number;
+            if(health <= 0)
+            {
+                Event e2 = new Event("Die");
+                self.SendEvent(e2);
+                self.getWorld().despawn(self);
+            }
             System.out.println("PHYSICAL: " +health);
         }
     }

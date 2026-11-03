@@ -19,7 +19,7 @@ public class EntityFactory {
     }
 
     public Entity create(Type type, int x, int y) {
-        Entity entity = new Entity();
+        Entity entity = new Entity(world);
         entity.components.add(new cPosition(entity, x, y));
 
         switch (type) {
@@ -63,7 +63,6 @@ public class EntityFactory {
                 entity.components.add(new Physical(entity));
                 entity.components.add(new Renderable(entity, 16, 16, Color.MAGENTA));
                 entity.components.add(new Vision(entity, world, 100));
-                
                 entity.components.add(new Brain(entity));
                 entity.components.add(new Aggressive(entity));
             }
