@@ -64,6 +64,7 @@ public class EntityFactory {
                 entity.components.add(new Renderable(entity, 16, 16, Color.MAGENTA));
                 entity.components.add(new Vision(entity, world, 100));
                 entity.components.add(new Brain(entity));
+                entity.components.add(new Eater(entity));
                 entity.components.add(new Aggressive(entity));
             }
             
