@@ -34,7 +34,7 @@ public class Brain extends Component {
         if (!e.ID.equals("TickUpdate")) {
             return;
         }
-
+        
         proposedGoals.clear();
         for (Component component : self.components) {
             if (component != this) {
@@ -44,6 +44,7 @@ public class Brain extends Component {
 
         Goal bestGoal = null;
         for (Goal goal : proposedGoals.values()) {
+            System.out.println(goal.id);
             if (bestGoal == null || goal.score > bestGoal.score) {
                 bestGoal = goal;
             }

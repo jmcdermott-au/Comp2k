@@ -8,7 +8,8 @@ public class EntityFactory {
         FLOWER,
         HORSE,
         ANT,
-        ANT_HILL
+        ANT_HILL,
+        ANGRY_CREATURE
     }
 
     private final GameWorld world;
@@ -31,6 +32,7 @@ public class EntityFactory {
             }
             case FOOD -> {
                 entity.components.add(new Renderable(entity, 16, 16, Color.RED));
+                entity.components.add(new Physical(entity));
                 entity.components.add(new Edible(entity, world));
             }
             case FLOWER -> {
@@ -57,6 +59,15 @@ public class EntityFactory {
                 entity.components.add(new Renderable(entity, 16, 16, Color.ORANGE));
                 entity.components.add(new AntHill(entity, world, this));
             }
+            case ANGRY_CREATURE -> {
+                entity.components.add(new Physical(entity));
+                entity.components.add(new Renderable(entity, 16, 16, Color.MAGENTA));
+                entity.components.add(new Vision(entity, world, 100));
+                
+                entity.components.add(new Brain(entity));
+                entity.components.add(new Aggressive(entity));
+            }
+            
         }
 
         return entity;

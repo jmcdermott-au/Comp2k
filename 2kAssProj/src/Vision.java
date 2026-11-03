@@ -34,6 +34,31 @@ public class Vision extends Component {
             e1.Parameters.put("edibles", edibles);
             self.SendEvent(e1);
         }
+        if(e.ID.equals("GetClosestEntity"))
+        {
+            cPosition myPos = self.getComponent(cPosition.class);
+            Entity closest = null;
+            double closestDistanceSquared = Double.POSITIVE_INFINITY;
+
+            for (Entity entity : getVisibleEntities()) 
+            {
+                cPosition position = entity.getComponent(cPosition.class);
+                if (position == null) 
+                {
+                    continue;
+                }
+
+                double dx = (double) position.getX() - myPos.getX();
+                double dy = (double) position.getY() - myPos.getY();
+                double distanceSquared = dx * dx + dy * dy;
+                if (distanceSquared < closestDistanceSquared) 
+                {
+                    closest = entity;
+                    closestDistanceSquared = distanceSquared;
+                }
+            }
+            e.Parameters.put("Closest", closest);
+        }
     }
 
 
