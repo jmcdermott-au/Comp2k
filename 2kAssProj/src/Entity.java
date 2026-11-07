@@ -1,35 +1,35 @@
 import java.util.ArrayList;
 
 public class Entity {
-public ArrayList<Component> components;
-private final GameWorld world;
-public boolean SendEvent(Event e)
-{
-    for(Component cmp : components)
-    {
-        if (cmp.wantEvent(e.ID)) {
-            cmp.handleEvent(e);
-            if (e.isPropagationStopped()) {
-                break;
+    public ArrayList<Component> components;
+    private final GameWorld world;
+
+    public boolean SendEvent(Event e) {
+        for (Component cmp : components) {
+            if (cmp.wantEvent(e.ID)) {
+                cmp.handleEvent(e);
+                if (e.isPropagationStopped()) {
+                    break;
+                }
             }
         }
+        return true;
     }
-return true;
-}
-public Entity(GameWorld world)
-{
-    components = new ArrayList<>();
-    this.world = world;
-    
-}
-public <T extends Component> T getComponent(Class<T> type) {
-    for (Component component : components) {
-        if (type.isInstance(component)) {
-            return type.cast(component);
+
+    public Entity(GameWorld world) {
+        components = new ArrayList<>();
+        this.world = world;
+
+    }
+
+    public <T extends Component> T getComponent(Class<T> type) {
+        for (Component component : components) {
+            if (type.isInstance(component)) {
+                return type.cast(component);
+            }
         }
+        return null;
     }
-    return null;
-}
 
     public GameWorld getWorld() {
         return world;

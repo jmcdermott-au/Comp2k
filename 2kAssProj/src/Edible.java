@@ -1,5 +1,5 @@
 
-public class Edible extends Component{
+public class Edible extends Component {
 
     private final GameWorld world;
     private boolean consumed;
@@ -9,18 +9,15 @@ public class Edible extends Component{
         this.world = world;
     }
 
-
-    
     private int caloricValue = 10;
     private int calBaseVal = 10;
-    
+
     private boolean doSatMultiplier = true;
     private int rot;
-    private int rotThreshold; 
+    private int rotThreshold;
 
     public int getCaloricValue() {
-        
-        
+
         return caloricValue;
     }
 
@@ -28,9 +25,8 @@ public class Edible extends Component{
         return consumed;
     }
 
-    @Override 
-    public void Behaviour(Event e)
-    {
+    @Override
+    public void Behaviour(Event e) {
         if (!e.ID.equals("ImEatingYou") || consumed) {
             return;
         }
@@ -54,5 +50,4 @@ public class Edible extends Component{
         this.rot = rot;
     }
 
-    
 }

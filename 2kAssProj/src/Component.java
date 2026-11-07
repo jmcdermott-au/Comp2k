@@ -7,15 +7,6 @@ public class Component {
         self = ent;
     }
 
-    public void FireEvent(Event e)
-    {
-
-    }
-
-    public void TargetedEventSend(Entity ent)
-    {
-
-    }
 
     public boolean wantEvent(String eventId)
     {

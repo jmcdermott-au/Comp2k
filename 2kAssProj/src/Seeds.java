@@ -1,6 +1,6 @@
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
-public class Seeds extends Component{
+public class Seeds extends Component {
 
     public Seeds(Entity ent, GameWorld world, EntityFactory factory) {
         super(ent);
@@ -12,26 +12,26 @@ public class Seeds extends Component{
     private final EntityFactory factory;
     private int seedChance = 100;
 
-
     @Override
-    public void Behaviour(Event e) {
-        if(e.ID.equals("IJustGrewFood"))
+    public boolean wantEvent(String eventId) {
+        return eventId.equals("TickUpdate");
+    }
+    
+    @Override
+    public void handleEvent(Event e) {
+        if (shouldExecuteBehaviour()) // i should probably be a never nester but i cbf
         {
-            Random rand = new Random();
-            if(rand.nextInt(seedChance) == 0)
-            {
-                cPosition pos = self.getComponent(cPosition.class);
-                if (pos != null) 
-                {
-                    int spawnX = pos.getX() + 5;
-                    int spawnY = pos.getY() + 5;
-                    world.spawn(factory.create(EntityFactory.Type.FLOWER, spawnX, spawnY));
-                }
+            cPosition pos = self.getComponent(cPosition.class);
+            if (pos != null) {
+                int spawnX = pos.getX() + 5;
+                int spawnY = pos.getY() + 5;
+                world.spawn(factory.create(EntityFactory.Type.FLOWER, spawnX, spawnY));
             }
         }
     }
 
-    
-
+    private boolean shouldExecuteBehaviour() {
+        return ThreadLocalRandom.current().nextInt(0, seedChance) == 0;
+    }
 
 }
