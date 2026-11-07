@@ -1,38 +1,43 @@
 import java.util.LinkedHashMap;
+
 public class Event {
-String ID;
-LinkedHashMap<String, Object> Parameters; 
-private boolean propagationStopped;
-public Event()
-{
-    Parameters = new LinkedHashMap<>();
-}
-public Event(String ID)
-{
-    Parameters = new LinkedHashMap<>();
-    this.ID = ID;
-}
+    String ID;
+    LinkedHashMap<String, Object> Parameters;
+    private boolean propagationStopped;
 
-public void Debug()
-{
-    Parameters.forEach((key, value) -> System.out.println(key + " : " + value)); //cheeky cheeky lil lamba
-}
-
-public void stopPropagation() {
-    propagationStopped = true;
-}
-
-public boolean isPropagationStopped() {
-    return propagationStopped;
-}
-
-@SuppressWarnings("unchecked")
-public <T> T getParameter(String key, Class<T> type) {
-    Object obj = Parameters.get(key);
-    if (type.isInstance(obj)) {
-        return (T) obj;
+    public Event() {
+        Parameters = new LinkedHashMap<>();
     }
-    return null; // Or throw an exception depending on your error handling
-}
+
+    public Event with(String key, Object value) {
+        this.Parameters.put(key, value);
+        return this;
+    }
+
+    public Event(String ID) {
+        Parameters = new LinkedHashMap<>();
+        this.ID = ID;
+    }
+
+    public void Debug() {
+        Parameters.forEach((key, value) -> System.out.println(key + " : " + value)); // cheeky cheeky lil lamba
+    }
+
+    public void stopPropagation() {
+        propagationStopped = true;
+    }
+
+    public boolean isPropagationStopped() {
+        return propagationStopped;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getParameter(String key, Class<T> type) {
+        Object obj = Parameters.get(key);
+        if (type.isInstance(obj)) {
+            return (T) obj;
+        }
+        return null; // Or throw an exception depending on your error handling
+    }
 
 }

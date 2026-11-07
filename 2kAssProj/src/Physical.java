@@ -1,7 +1,6 @@
 public class Physical extends Component{
 
-    public Physical(Entity ent) {
-        super(ent);
+    public Physical() {
     }
 
     

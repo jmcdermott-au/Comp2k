@@ -1,11 +1,7 @@
 
+public class ScaredBrain extends Component {
 
-public class ScaredBrain extends Component{
-
-    
-
-    public ScaredBrain(Entity ent) {
-        super(ent);
+    public ScaredBrain() {
     }
 
     @Override

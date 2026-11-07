@@ -1,10 +1,9 @@
 
 import java.util.Comparator;
 
-public class Eater extends Component{
+public class Eater extends Component {
 
-    public Eater(Entity ent) {
-        super(ent);
+    public Eater() {
     }
 
     private int satiety = 100;
@@ -15,64 +14,52 @@ public class Eater extends Component{
     private int metabolicRate = 3;
     private int metabolicCount = 0;
 
-
-    private void DoMetabolism()
-    {
-        if(metabolicCount < metabolicRate)
-        {
+    private void doMetabolism() {
+        if (metabolicCount < metabolicRate) {
             metabolicCount++;
             return;
         }
-            setSatiety(satiety - metabolism);
-            metabolicCount = 0;
+        setSatiety(satiety - metabolism);
+        metabolicCount = 0;
     }
-    @Override 
-    public void Behaviour(Event e)
-    {
-        if(e.ID.equals("TickUpdate"))
-        {
-            DoMetabolism();
+
+    @Override
+    public boolean wantEvent(String eventId) {
+        return eventId.equals("TickUpdate") || eventId.equals("PursueFood") || eventId.equals("AteRottenFood");
+    }
+
+    @Override
+    public void handleEvent(Event e) {
+        switch (e.ID) {
+            case "TickUpdate" -> doMetabolism();
+            case "PursueFood" -> handlePursueFood(e);
+            case "AteRottenFood" -> handleAteRottenFood();
+        }
+    }
+
+    private void handlePursueFood(Event e) {
+        Entity food = e.getParameter("food", Entity.class);
+        cPosition myPos = self.getComponent(cPosition.class);
+        cPosition foodPosition = food == null
+                ? null
+                : food.getComponent(cPosition.class);
+        Edible edible = food == null ? null : food.getComponent(Edible.class);
+        if (myPos == null || foodPosition == null || edible == null
+                || edible.isConsumed()) {
+            return;
         }
 
-        if (e.ID.equals("PursueFood"))
-        {
-            Entity food = e.getParameter("food", Entity.class);
-            cPosition myPos = self.getComponent(cPosition.class);
-            cPosition foodPosition = food == null
-                    ? null
-                    : food.getComponent(cPosition.class);
-            Edible edible = food == null ? null : food.getComponent(Edible.class);
-            if (myPos == null || foodPosition == null || edible == null
-                    || edible.isConsumed()) {
-                return;
-            }
-
-            if(myPos.getX() == foodPosition.getX() && myPos.getY() == foodPosition.getY())
-            {
-                Event eat = new Event("ImEatingYou");
-                eat.Parameters.put("eater", self);
-                eat.Parameters.put("satiety", satiety);
-                food.SendEvent(eat);
-                setSatiety(satiety + edible.getCaloricValue());
-            }
-
-            Event move = new Event("IwannaMoveHere");
-            move.Parameters.put("location", foodPosition);
-            self.SendEvent(move);
+        if (myPos.getX() == foodPosition.getX() && myPos.getY() == foodPosition.getY()) {
+            Event eat = new Event("ImEatingYou");
+            eat.Parameters.put("eater", self);
+            eat.Parameters.put("satiety", satiety);
+            food.SendEvent(eat);
+            setSatiety(satiety + edible.getCaloricValue());
         }
 
-        if(e.ID.equals("EatThis"))
-        {
-            
-        }
-        if(e.ID.equals("AteRottenFood"))
-        {
-            Event e1 = new Event();
-            e1.ID = "TakeDamage";
-            e1.Parameters.put("amount", 5);
-            e1.Parameters.put("type", "poison");
-            self.SendEvent(e1);
-        }
+        Event move = new Event("IwannaMoveHere");
+        move.Parameters.put("location", foodPosition);
+        self.SendEvent(move);
     }
 
     @Override
@@ -88,18 +75,19 @@ public class Eater extends Component{
         }
 
         Entity closestFood = vision.getVisibleEntities().stream() // this used to be a for loop, now its a stream
-            .filter(entity -> { // we are searching the visible entities for edibles
-                Edible edible = entity.getComponent(Edible.class);
-                return edible != null && !edible.isConsumed();  // cant be already eaten or nonexistent
-            })
-            .filter(entity -> entity.getComponent(cPosition.class) != null) // grab the position of the current edible
-            .min(Comparator.comparingDouble(entity -> { // .min: actually useful! im a fan.
-                cPosition pos = entity.getComponent(cPosition.class);
-                double dx = (double) pos.getX() - myPos.getX();
-                double dy = (double) pos.getY() - myPos.getY();
-                return dx * dx + dy * dy;
-            }))
-            .orElse(null);
+                .filter(entity -> { // we are searching the visible entities for edibles
+                    Edible edible = entity.getComponent(Edible.class);
+                    return edible != null && !edible.isConsumed(); // cant be already eaten or nonexistent
+                })
+                .filter(entity -> entity.getComponent(cPosition.class) != null) // grab the position of the current
+                                                                                // edible
+                .min(Comparator.comparingDouble(entity -> { // .min: actually useful! im a fan.
+                    cPosition pos = entity.getComponent(cPosition.class);
+                    double dx = (double) pos.getX() - myPos.getX();
+                    double dy = (double) pos.getY() - myPos.getY();
+                    return dx * dx + dy * dy;
+                }))
+                .orElse(null);
 
         if (closestFood == null) {
             return;
@@ -114,11 +102,9 @@ public class Eater extends Component{
         return satiety;
     }
 
-    private void setSatiety(int x)
-    {
-        this.satiety = x; 
-        if(satiety > capacity)
-        {
+    private void setSatiety(int x) {
+        this.satiety = x;
+        if (satiety > capacity) {
             Event e = new Event();
             e.ID = "AteTooMuch";
             e.Parameters.put("excess", satiety - capacity);
@@ -131,10 +117,8 @@ public class Eater extends Component{
             e2.Parameters.put("amount", 5);
             self.SendEvent(e2);
 
-            
         }
-        if(satiety < 0)
-        {
+        if (satiety < 0) {
             Event e1 = new Event();
             e1.ID = "Starving";
             self.SendEvent(e1);
@@ -145,7 +129,11 @@ public class Eater extends Component{
         }
     }
 
-    
+    private void handleAteRottenFood() {
+        Event e1 = new Event("TakeDamage");
+        e1.Parameters.put("amount", 5);
+        e1.Parameters.put("type", "poison");
+        self.SendEvent(e1);
+    }
 
-    
 }

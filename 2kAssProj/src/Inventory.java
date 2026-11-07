@@ -3,8 +3,7 @@ import java.util.ArrayList;
 
 public class Inventory extends Component {
 
-    public Inventory(Entity ent) {
-        super(ent);
+    public Inventory() {
         items = new ArrayList<>();
     }
 

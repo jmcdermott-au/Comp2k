@@ -19,55 +19,54 @@ public class EntityFactory {
     }
 
     public Entity create(Type type, int x, int y) {
-        Entity entity = new Entity(world);
-        entity.components.add(new cPosition(entity, x, y));
+        Entity entity = new Entity(world)
+                .withComponent(new cPosition(x, y));
 
         switch (type) {
-            case BLUE_CREATURE -> {
-                entity.components.add(new Physical(entity));
-                entity.components.add(new Renderable(entity, 16, 16, Color.BLUE));
-                entity.components.add(new Vision(entity, world, 100));
-                entity.components.add(new Eater(entity));
-                entity.components.add(new Brain(entity));
-            }
-            case FOOD -> {
-                entity.components.add(new Renderable(entity, 16, 16, Color.RED));
-                entity.components.add(new Physical(entity));
-                entity.components.add(new Edible(entity, world));
-            }
-            case FLOWER -> {
-                entity.components.add(new Physical(entity));
-                entity.components.add(new Renderable(entity, 16, 16, Color.GREEN));
-                entity.components.add(new Flower(entity, world, this));
-                entity.components.add(new Seeds(entity, world, this));
-            }
-            case HORSE -> {
-                entity.components.add(new Physical(entity));
-                entity.components.add(new Renderable(entity, 16, 16, Color.BLACK));
-                entity.components.add(new Vision(entity, world, 100));
-                entity.components.add(new ScaredBrain(entity));
-                entity.components.add(new Brain(entity));
-            }
-            case ANT -> {
-                entity.components.add(new Physical(entity));
-                entity.components.add(new Renderable(entity, 16, 16, Color.DARK_GRAY));
-                entity.components.add(new AntBrain(entity, x, y, world, this));
-                entity.components.add(new Brain(entity));
-            }
-            case ANT_HILL -> {
-                entity.components.add(new Physical(entity));
-                entity.components.add(new Renderable(entity, 16, 16, Color.ORANGE));
-                entity.components.add(new AntHill(entity, world, this));
-            }
-            case ANGRY_CREATURE -> {
-                entity.components.add(new Physical(entity));
-                entity.components.add(new Renderable(entity, 16, 16, Color.MAGENTA));
-                entity.components.add(new Vision(entity, world, 100));
-                entity.components.add(new Brain(entity));
-                entity.components.add(new Eater(entity));
-                entity.components.add(new Aggressive(entity));
-            }
-            
+            case BLUE_CREATURE -> entity
+                    .withComponent(new Physical())
+                    .withComponent(new Renderable(16, 16, Color.BLUE))
+                    .withComponent(new Vision(world, 100))
+                    .withComponent(new Eater())
+                    .withComponent(new Brain());
+
+            case FOOD -> entity
+                    .withComponent(new Renderable(16, 16, Color.RED))
+                    .withComponent(new Physical())
+                    .withComponent(new Edible(world));
+
+            case FLOWER -> entity
+                    .withComponent(new Physical())
+                    .withComponent(new Renderable(16, 16, Color.GREEN))
+                    .withComponent(new Flower(world, this))
+                    .withComponent(new Seeds(world, this));
+
+            case HORSE -> entity
+                    .withComponent(new Physical())
+                    .withComponent(new Renderable(16, 16, Color.BLACK))
+                    .withComponent(new Vision(world, 100))
+                    .withComponent(new ScaredBrain())
+                    .withComponent(new Brain());
+
+            case ANT -> entity
+                    .withComponent(new Physical())
+                    .withComponent(new Renderable(16, 16, Color.DARK_GRAY))
+                    .withComponent(new AntBrain(x, y, world, this))
+                    .withComponent(new Brain());
+
+            case ANT_HILL -> entity
+                    .withComponent(new Physical())
+                    .withComponent(new Renderable(16, 16, Color.ORANGE))
+                    .withComponent(new AntHill(world, this));
+
+            case ANGRY_CREATURE -> entity
+                    .withComponent(new Physical())
+                    .withComponent(new Renderable(16, 16, Color.MAGENTA))
+                    .withComponent(new Vision(world, 100))
+                    .withComponent(new Brain())
+                    .withComponent(new Eater())
+                    .withComponent(new Aggressive());
+
         }
 
         return entity;

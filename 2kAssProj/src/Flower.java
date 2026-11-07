@@ -3,8 +3,7 @@ import java.util.Random;
 
 public class Flower extends Component {
 
-    public Flower(Entity ent, GameWorld world, EntityFactory factory) {
-        super(ent);
+    public Flower(GameWorld world, EntityFactory factory) {
         this.world = world;
         this.factory = factory;
     }
@@ -24,11 +23,6 @@ public class Flower extends Component {
         switch (e.ID) {
             case "TickUpdate" -> GrowFood();
         }
-    }
-
-    @Override
-    public void Behaviour(Event e) {
-        handleEvent(e);
     }
 
     private void GrowFood() {

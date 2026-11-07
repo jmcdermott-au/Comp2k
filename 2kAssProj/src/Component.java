@@ -1,30 +1,27 @@
-public class Component {
-    public Entity self;
+public abstract class Component {
+    protected Entity self;
     protected boolean debug = true;
 
-    public Component(Entity ent)
-    {
-        self = ent;
+    public Component() {
     }
 
-
-    public boolean wantEvent(String eventId)
-    {
+    public boolean wantEvent(String eventId) {
         return true;
     }
 
-    public void handleEvent(Event e)
-    {
+    public void setEntity(Entity entity) {
+        this.self = entity;
+    }
+
+    public void handleEvent(Event e) {
         Behaviour(e);
     }
 
-    public void Behaviour(Event e)
-    {
+    public void Behaviour(Event e) {
 
     }
 
-    public void proposeGoals(Brain brain)
-    {
+    public void proposeGoals(Brain brain) {
 
     }
 }

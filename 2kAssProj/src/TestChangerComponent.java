@@ -1,7 +1,5 @@
 public class TestChangerComponent extends Component{
-public TestChangerComponent(Entity ent) {
-        super(ent);
-        //TODO Auto-generated constructor stub
+public TestChangerComponent() {
     }
 int change = 5;
     @Override

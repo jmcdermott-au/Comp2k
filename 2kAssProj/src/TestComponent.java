@@ -1,7 +1,5 @@
 public class TestComponent extends Component {
-public TestComponent(Entity ent) {
-        super(ent);
-        //TODO Auto-generated constructor stub
+public TestComponent() {
     }
 
 public int health = 10;

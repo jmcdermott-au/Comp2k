@@ -4,8 +4,7 @@ public class Edible extends Component {
     private final GameWorld world;
     private boolean consumed;
 
-    public Edible(Entity entity, GameWorld world) {
-        super(entity);
+    public Edible(GameWorld world) {
         this.world = world;
     }
 

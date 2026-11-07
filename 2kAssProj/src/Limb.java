@@ -2,8 +2,7 @@ public class Limb extends Component{
 
     //LIMBS ARE NOT ENTITIES. THEY ARE COMPONENTS!!!
 
-    public Limb(Entity ent) {
-        super(ent);
+    public Limb() {
     }
 
     private String name = "arm";

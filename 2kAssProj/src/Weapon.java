@@ -1,11 +1,9 @@
 public class Weapon extends Component {
 
-    public Weapon(Entity ent) {
-        super(ent);
+    public Weapon() {
     }
 
-    public Weapon(Entity ent, int dmg, String nam) {
-        super(ent);
+    public Weapon(int dmg, String nam) {
         wepDamage = dmg;
         name = nam;
     }

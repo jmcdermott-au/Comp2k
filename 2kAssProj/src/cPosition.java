@@ -5,8 +5,7 @@ public class cPosition extends Component {
     private int x;
     private int y;
 
-    public cPosition(Entity entity, int x, int y) {
-        super(entity);
+    public cPosition(int x, int y) {
         this.x = x;
         this.y = y;
     }

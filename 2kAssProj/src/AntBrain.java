@@ -12,9 +12,8 @@ public class AntBrain extends Component{
     private int destinationX;
     private int destinationY;
 
-    public AntBrain(Entity ent, int homeX, int homeY, GameWorld world,
+    public AntBrain(int homeX, int homeY, GameWorld world,
             EntityFactory factory) {
-        super(ent);
         this.homeX = homeX;
         this.homeY = homeY;
         this.world = world;
@@ -65,7 +64,7 @@ public class AntBrain extends Component{
         }
 
         if (position.getX() != destinationX || position.getY() != destinationY) {
-            cPosition destination = new cPosition(self, destinationX, destinationY);
+            cPosition destination = new cPosition(destinationX, destinationY);
             Event move = new Event("IwannaMoveHere");
             move.Parameters.put("location", destination);
             self.SendEvent(move);

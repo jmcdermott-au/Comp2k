@@ -8,10 +8,9 @@ public class Brain extends Component {
     private final Map<String, Goal> proposedGoals = new LinkedHashMap<>();
     private String currentGoal;
 
-    public Brain(Entity entity) {
-        super(entity);
+    public Brain() {
     }
-    
+
     public void proposeGoal(String id, double score, Event action) {
         Objects.requireNonNull(id, "Goal id cannot be null");
         Objects.requireNonNull(action, "Goal action cannot be null");
@@ -29,17 +28,16 @@ public class Brain extends Component {
         }
     }
 
-    
     @Override
     public void Behaviour(Event e) {
         if (!e.ID.equals("TickUpdate")) {
             return;
         }
-        
+
         proposedGoals.clear();
         for (Component component : self.components) {
             if (component != this) {
-                component.proposeGoals(this); //stupid - this block should be self.send(e1)
+                component.proposeGoals(this); 
             }
         }
 

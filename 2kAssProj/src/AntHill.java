@@ -13,8 +13,7 @@ public class AntHill extends Component {
     private final EntityFactory factory;
     private int ticksUntilSpawn = SPAWN_INTERVAL_TICKS;
 
-    public AntHill(Entity entity, GameWorld world, EntityFactory factory) {
-        super(entity);
+    public AntHill(GameWorld world, EntityFactory factory) {
         this.world = world;
         this.factory = factory;
     }

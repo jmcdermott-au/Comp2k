@@ -16,6 +16,12 @@ public class Entity {
         return true;
     }
 
+    public Entity withComponent(Component component) {
+        component.setEntity(this);
+        this.components.add(component);
+        return this;
+    }
+
     public Entity(GameWorld world) {
         components = new ArrayList<>();
         this.world = world;

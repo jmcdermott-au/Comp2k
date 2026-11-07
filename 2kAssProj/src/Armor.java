@@ -1,11 +1,9 @@
 public class Armor extends Component{
 
-    public Armor(Entity ent) {
-        super(ent);
+    public Armor() {
     }
-    public Armor(Entity ent, int mit, String nam)
+    public Armor(int mit, String nam)
     {
-        super(ent);
         damageMitigation = mit;
         name = nam;
     }

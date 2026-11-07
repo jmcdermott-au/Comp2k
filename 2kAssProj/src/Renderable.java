@@ -10,9 +10,7 @@ public class Renderable extends Component {
     Color color = Color.RED; // Color of the object
     int width, height = 16;
     // Constructor
-    public Renderable(Entity ent, int width, int height, Color color) {
-
-        super(ent);
+    public Renderable(int width, int height, Color color) {
         this.color = color;
         this.width = width;
         this.height = height;

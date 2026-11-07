@@ -2,8 +2,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Seeds extends Component {
 
-    public Seeds(Entity ent, GameWorld world, EntityFactory factory) {
-        super(ent);
+    public Seeds(GameWorld world, EntityFactory factory) {
         this.world = world;
         this.factory = factory;
     }
@@ -16,11 +15,16 @@ public class Seeds extends Component {
     public boolean wantEvent(String eventId) {
         return eventId.equals("TickUpdate");
     }
-    
+
     @Override
     public void handleEvent(Event e) {
-        if (shouldExecuteBehaviour()) // i should probably be a never nester but i cbf
-        {
+        switch (e.ID) {
+            case "IJustGrewFood" -> handleSprouting(e);
+        }
+    }
+
+    private void handleSprouting(Event e) {
+        if (ThreadLocalRandom.current().nextInt(0, seedChance) == 0) {
             cPosition pos = self.getComponent(cPosition.class);
             if (pos != null) {
                 int spawnX = pos.getX() + 5;
@@ -28,10 +32,6 @@ public class Seeds extends Component {
                 world.spawn(factory.create(EntityFactory.Type.FLOWER, spawnX, spawnY));
             }
         }
-    }
-
-    private boolean shouldExecuteBehaviour() {
-        return ThreadLocalRandom.current().nextInt(0, seedChance) == 0;
     }
 
 }
