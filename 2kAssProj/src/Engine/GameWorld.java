@@ -17,6 +17,17 @@ public class GameWorld {
         return Collections.unmodifiableList(entities);
     }
 
+    public long countEntities(Predicate<Entity> predicate) {
+        return entities.stream()
+                .filter(entity -> !pendingRemovals.contains(entity))
+                .filter(predicate)
+                .count()
+                + pendingAdds.stream()
+                        .filter(entity -> !pendingRemovals.contains(entity))
+                        .filter(predicate)
+                        .count();
+    }
+
     public void spawn(Entity entity) {
         if (ticking) {
             pendingAdds.add(entity);

@@ -8,9 +8,14 @@ import Engine.EntityFactory;
 import Engine.Event;
 import Engine.GameWorld;
 import Engine.EntityFactory.Type;
+import Components.Food.Edible;
 
 public class AntHill extends Component {
     private static final int SPAWN_INTERVAL_TICKS = 10;
+    private static final int MIN_VIABLE_ANT_POPULATION = 5;
+    private static final int BASE_SOFT_POPULATION_CAP = 20;
+    private static final int ANTS_PER_FOOD = 3;
+    private static final int MAX_ANT_POPULATION = 100;
     private static final int OVERCROWDING_THRESHOLD = 50;
     private static final int ANT_COUNT_RADIUS = 15;
     private static final int MIGRATION_GROUP_SIZE = 25;
@@ -43,12 +48,39 @@ public class AntHill extends Component {
             return;
         }
 
-        world.spawn(factory.create(
-            EntityFactory.Type.ANT,
-            hillPosition.getX(),
-            hillPosition.getY()
-        ));
         ticksUntilSpawn = SPAWN_INTERVAL_TICKS;
+        trySpawnAnt(hillPosition);
+    }
+
+    private void trySpawnAnt(cPosition hillPosition) {
+        long antPopulation = world.countEntities(entity -> entity.getComponent(AntBrain.class) != null);
+        if (antPopulation >= MAX_ANT_POPULATION) {
+            return;
+        }
+
+        if (antPopulation >= MIN_VIABLE_ANT_POPULATION) {
+            long availableFood = world.countEntities(entity -> {
+                Edible edible = entity.getComponent(Edible.class);
+                return edible != null && !edible.isConsumed();
+            });
+            long softCap = Math.min(
+                    MAX_ANT_POPULATION,
+                    BASE_SOFT_POPULATION_CAP + availableFood * ANTS_PER_FOOD);
+            if (antPopulation >= softCap) {
+                return;
+            }
+
+            double spawnChance = (softCap - antPopulation)
+                    / (double) (softCap - MIN_VIABLE_ANT_POPULATION);
+            if (ThreadLocalRandom.current().nextDouble() >= spawnChance) {
+                return;
+            }
+        }
+
+        world.spawn(factory.create(
+                EntityFactory.Type.ANT,
+                hillPosition.getX(),
+                hillPosition.getY()));
     }
 
     private void startColonySplitIfOvercrowded(cPosition hillPosition) {

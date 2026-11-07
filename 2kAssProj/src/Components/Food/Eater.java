@@ -53,7 +53,7 @@ public class Eater extends Component {
                 : food.getComponent(cPosition.class);
         Edible edible = food == null ? null : food.getComponent(Edible.class);
         if (myPos == null || foodPosition == null || edible == null
-                || edible.isConsumed()) {
+                || edible.isConsumed() || isRotten(food)) {
             return;
         }
 
@@ -85,7 +85,7 @@ public class Eater extends Component {
         Entity closestFood = vision.getVisibleEntities().stream() // this used to be a for loop, now its a stream
                 .filter(entity -> { // we are searching the visible entities for edibles
                     Edible edible = entity.getComponent(Edible.class);
-                    return edible != null && !edible.isConsumed(); // cant be already eaten or nonexistent
+                    return edible != null && !edible.isConsumed() && !isRotten(entity);
                 })
                 .filter(entity -> entity.getComponent(cPosition.class) != null) // grab the position of the current
                                                                                 // edible
@@ -106,15 +106,21 @@ public class Eater extends Component {
         brain.proposeGoal("eat", 100 - satiety, pursueFood);
     }
 
+    private boolean isRotten(Entity food) {
+        Rottable rottable = food.getComponent(Rottable.class);
+        return rottable != null && rottable.isRotten();
+    }
+
     public int getSatiety() {
         return satiety;
     }
 
     private void setSatiety(int x) {
-        if (this.satiety > capacity) {
-            sendDamageEvent(satiety - capacity);
+        if (x > capacity) {
+            sendDamageEvent(x - capacity);
             this.satiety = baselineAfterTooMuch;
-
+        } else {
+            this.satiety = x;
         }
 
     }

@@ -17,6 +17,10 @@ public class Renderable extends Component {
         this.height = height;
     }
 
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     // Paint itself given the Graphics conte
     public void paint(Graphics g, int screenX, int screenY) {
         g.setColor(color);
