@@ -7,7 +7,12 @@ public boolean SendEvent(Event e)
 {
     for(Component cmp : components)
     {
-        cmp.Behaviour(e);
+        if (cmp.wantEvent(e.ID)) {
+            cmp.handleEvent(e);
+            if (e.isPropagationStopped()) {
+                break;
+            }
+        }
     }
 return true;
 }

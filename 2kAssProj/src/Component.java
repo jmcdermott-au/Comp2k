@@ -17,6 +17,16 @@ public class Component {
 
     }
 
+    public boolean wantEvent(String eventId)
+    {
+        return true;
+    }
+
+    public void handleEvent(Event e)
+    {
+        Behaviour(e);
+    }
+
     public void Behaviour(Event e)
     {
 

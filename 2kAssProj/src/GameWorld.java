@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class GameWorld {
     private final List<Entity> entities = new ArrayList<>();
@@ -30,11 +31,10 @@ public class GameWorld {
     public void tick() {
         ticking = true;
         try {
-            for (Entity entity : new ArrayList<>(entities)) {
-                if (!pendingRemovals.contains(entity)) {
-                    entity.SendEvent(new Event("TickUpdate"));
-                }
-            }
+            new ArrayList<>(entities).stream()
+            .filter(Predicate.not(pendingRemovals::contains))
+            .forEach(entity -> entity.SendEvent(new Event("TickUpdate")));
+            
         } finally {
             ticking = false;
         }

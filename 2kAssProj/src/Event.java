@@ -2,6 +2,7 @@ import java.util.LinkedHashMap;
 public class Event {
 String ID;
 LinkedHashMap<String, Object> Parameters; 
+private boolean propagationStopped;
 public Event()
 {
     Parameters = new LinkedHashMap<>();
@@ -14,7 +15,15 @@ public Event(String ID)
 
 public void Debug()
 {
-    Parameters.forEach((key, value) -> System.out.println(key + " : " + value));
+    Parameters.forEach((key, value) -> System.out.println(key + " : " + value)); //cheeky cheeky lil lamba
+}
+
+public void stopPropagation() {
+    propagationStopped = true;
+}
+
+public boolean isPropagationStopped() {
+    return propagationStopped;
 }
 
 @SuppressWarnings("unchecked")

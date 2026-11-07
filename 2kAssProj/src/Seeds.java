@@ -20,7 +20,13 @@ public class Seeds extends Component{
             Random rand = new Random();
             if(rand.nextInt(seedChance) == 0)
             {
-                world.spawn(factory.create(EntityFactory.Type.FLOWER, self.getComponent(cPosition.class).getX() + 5, self.getComponent(cPosition.class).getY() + 5 ));
+                cPosition pos = self.getComponent(cPosition.class);
+                if (pos != null) 
+                {
+                    int spawnX = pos.getX() + 5;
+                    int spawnY = pos.getY() + 5;
+                    world.spawn(factory.create(EntityFactory.Type.FLOWER, spawnX, spawnY));
+                }
             }
         }
     }

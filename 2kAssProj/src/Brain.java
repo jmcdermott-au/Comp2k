@@ -29,7 +29,7 @@ public class Brain extends Component {
         }
     }
 
-    // i don't like how the AI did this. Should use events!
+    
     @Override
     public void Behaviour(Event e) {
         if (!e.ID.equals("TickUpdate")) {

@@ -1,3 +1,6 @@
+
+import java.util.Comparator;
+
 public class Eater extends Component{
 
     public Eater(Entity ent) {
@@ -84,27 +87,19 @@ public class Eater extends Component{
             return;
         }
 
-        Entity closestFood = null;
-        double closestDistanceSquared = Double.POSITIVE_INFINITY;
-        for (Entity entity : vision.getVisibleEntities()) {
-            Edible edible = entity.getComponent(Edible.class);
-            if (edible == null || edible.isConsumed()) {
-                continue;
-            }
-
-            cPosition position = entity.getComponent(cPosition.class);
-            if (position == null) {
-                continue;
-            }
-
-            double dx = (double) position.getX() - myPos.getX();
-            double dy = (double) position.getY() - myPos.getY();
-            double distanceSquared = dx * dx + dy * dy;
-            if (distanceSquared < closestDistanceSquared) {
-                closestFood = entity;
-                closestDistanceSquared = distanceSquared;
-            }
-        }
+        Entity closestFood = vision.getVisibleEntities().stream() // this used to be a for loop, now its a stream
+            .filter(entity -> { // we are searching the visible entities for edibles
+                Edible edible = entity.getComponent(Edible.class);
+                return edible != null && !edible.isConsumed();  // cant be already eaten or nonexistent
+            })
+            .filter(entity -> entity.getComponent(cPosition.class) != null) // grab the position of the current edible
+            .min(Comparator.comparingDouble(entity -> { // .min: actually useful! im a fan.
+                cPosition pos = entity.getComponent(cPosition.class);
+                double dx = (double) pos.getX() - myPos.getX();
+                double dy = (double) pos.getY() - myPos.getY();
+                return dx * dx + dy * dy;
+            }))
+            .orElse(null);
 
         if (closestFood == null) {
             return;

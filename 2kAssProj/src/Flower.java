@@ -27,8 +27,8 @@ public class Flower extends Component{
             world.spawn(factory.create(EntityFactory.Type.FOOD, randomNumX, randomNumY));
             growCount = 0;
 
-            Event e1 = new Event("IJustGrewFood");
-            self.SendEvent(e1);
+            
+            self.SendEvent(new Event("IJustGrewFood"));
             return;
         }
         growCount ++;
