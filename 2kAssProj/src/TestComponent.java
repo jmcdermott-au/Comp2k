@@ -1,3 +1,7 @@
+import Components.Component;
+import Engine.Entity;
+import Engine.Event;
+
 public class TestComponent extends Component {
 public TestComponent() {
     }

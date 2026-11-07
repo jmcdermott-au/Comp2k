@@ -1,3 +1,6 @@
+import Components.Component;
+import Engine.Event;
+
 public class TestChangerComponent extends Component{
 public TestChangerComponent() {
     }

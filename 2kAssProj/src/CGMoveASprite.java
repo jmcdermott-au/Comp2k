@@ -2,6 +2,12 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import Components.Component;
+import Components.Renderable;
+import Components.cPosition;
+import Engine.Entity;
+import Engine.GameWorld;
+
 public class CGMoveASprite extends JFrame {
     private static final int TILE_SIZE = 16;
 
