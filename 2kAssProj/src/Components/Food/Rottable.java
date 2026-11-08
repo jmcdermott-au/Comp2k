@@ -1,11 +1,10 @@
 package Components.Food;
 
-import java.awt.Color;
-
 import Components.Component;
 import Components.Renderable;
 import Engine.Entity;
 import Engine.Event;
+import java.awt.Color;
 
 public class Rottable extends Component {
     private int age = 0;

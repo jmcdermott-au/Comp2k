@@ -8,11 +8,14 @@ import Components.Flower;
 import Components.Food.Eater;
 import Components.Food.Edible;
 import Components.Food.Rottable;
+import Components.Inventory;
+import Components.Limb;
 import Components.Physical;
 import Components.Renderable;
 import Components.ScaredBrain;
 import Components.Seeds;
 import Components.Vision;
+import Components.Weapon;
 import Components.cPosition;
 import java.awt.Color;
 import java.util.Objects;
@@ -25,7 +28,8 @@ public class EntityFactory {
                 HORSE,
                 ANT,
                 ANT_HILL,
-                ANGRY_CREATURE
+                ANGRY_CREATURE,
+                ARMED_CREATURE
         }
 
         private final GameWorld world;
@@ -84,8 +88,28 @@ public class EntityFactory {
                                         .withComponent(new Eater())
                                         .withComponent(new Aggressive());
 
+                        case ARMED_CREATURE -> addEquipment(entity);
                 }
 
                 return entity;
+        }
+
+        private void addEquipment(Entity creature) {
+                Limb leftArm = new Limb("left arm");
+                Limb rightArm = new Limb("right arm");
+                Inventory inventory = new Inventory();
+                Entity sword = new Entity(world).withComponent(new Weapon(10, "sword"));
+
+                creature
+                                .withComponent(new Physical())
+                                .withComponent(new Renderable(16, 16, Color.GRAY))
+                                .withComponent(inventory)
+                                .withComponent(leftArm)
+                                .withComponent(rightArm);
+
+                creature.SendEvent(new Event("addItem").with("item", sword));
+                creature.SendEvent(new Event("equipItemInLimb")
+                                .with("item", sword)
+                                .with("target", leftArm));
         }
 }

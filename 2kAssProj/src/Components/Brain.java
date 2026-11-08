@@ -1,9 +1,9 @@
 package Components;
+
+import Engine.Event;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import Engine.Event;
 
 public class Brain extends Component {
     private static final double GOAL_SWITCH_MARGIN = 10.0;
@@ -12,6 +12,11 @@ public class Brain extends Component {
     private String currentGoal;
 
     public Brain() {
+    }
+
+    @Override
+    public boolean wantEvent(String eventId) {
+        return "TickUpdate".equals(eventId);
     }
 
     public void proposeGoal(String id, double score, Event action) {
@@ -32,21 +37,28 @@ public class Brain extends Component {
     }
 
     @Override
-    public void Behaviour(Event e) {
-        if (!e.ID.equals("TickUpdate")) {
-            return;
+    public void handleEvent(Event e) {
+        switch (e.ID) {
+            case "TickUpdate" -> handleUpdate();
         }
 
+    }
+
+    @Override
+    public void Behaviour(Event e) {
+        handleEvent(e);
+    }
+
+    private void handleUpdate() {
         proposedGoals.clear();
         for (Component component : self.components) {
             if (component != this) {
-                component.proposeGoals(this); 
+                component.proposeGoals(this);
             }
         }
 
         Goal bestGoal = null;
         for (Goal goal : proposedGoals.values()) {
-            System.out.println(goal.id);
             if (bestGoal == null || goal.score > bestGoal.score) {
                 bestGoal = goal;
             }

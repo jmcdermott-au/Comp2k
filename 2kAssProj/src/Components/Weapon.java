@@ -17,25 +17,24 @@ public class Weapon extends Component {
     private String name = "default";
 
     @Override
-    public void Behaviour(Event e) {
-        if (e.ID.equals("DealingDamage")) {
-            Integer amountParam = e.getParameter("amount", Integer.class);
-            int tempAmount = amountParam + wepDamage;
-            if (tempAmount < 0) {
-                tempAmount = 0;
-            }
-            System.out.println("Weapon: " + amountParam + ", " + tempAmount);
-            e.Parameters.put("amount", tempAmount);
+    public boolean wantEvent(String eventId) {
+        return eventId.equals("DealingDamage");
+    }
 
-            // code for unsure if crit chance will already be a param
-            if (e.Parameters.containsKey("critChance")) {
-                Integer critParam = e.getParameter("critChance", Integer.class);
-                e.Parameters.put("critChance", critParam + critChance);
-            } else {
-                e.Parameters.put("critChance", critChance);
-            }
-
+    @Override
+    public void handleEvent(Event e) {
+        Integer amountParam = e.getParameter("amount", Integer.class);
+        if (amountParam == null) {
+            throw new IllegalArgumentException("DealingDamage event must include an integer amount");
         }
+
+        int adjustedAmount = Math.max(0, amountParam + wepDamage);
+        System.out.println("Weapon: " + amountParam + ", " + adjustedAmount);
+        e.Parameters.put("amount", adjustedAmount);
+        Integer existingCritChance = e.getParameter("critChance", Integer.class);
+        e.Parameters.put(
+                "critChance",
+                existingCritChance == null ? critChance : existingCritChance + critChance);
     }
 
 }

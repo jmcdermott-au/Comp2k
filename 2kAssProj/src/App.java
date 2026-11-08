@@ -13,6 +13,7 @@ public class App {
         EntityFactory entityFactory = new EntityFactory(world);
 
         world.spawn(entityFactory.create(EntityFactory.Type.ANT_HILL, 25, 25));
+        world.spawn(entityFactory.create(EntityFactory.Type.ARMED_CREATURE, 25, 35));
 
         // world.spawn(entityFactory.create(EntityFactory.Type.ANGRY_CREATURE, 33, 33));
         for (int i = 0; i < 3; i++) {

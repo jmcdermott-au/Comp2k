@@ -16,6 +16,11 @@ public class cPosition extends Component {
     public int getX() { return x; }
     public int getY() { return y; }
 
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public void moveBy(int dx, int dy) {
         x += dx;
         y += dy;

@@ -7,55 +7,71 @@ public class Limb extends Component{
 
     //LIMBS ARE NOT ENTITIES. THEY ARE COMPONENTS!!!
 
+    private final String name;
+    private Entity equipped;
+
     public Limb() {
+        this("arm");
     }
 
-    private String name = "arm";
-    private Entity Equipped;
+    public Limb(String name) {
+        this.name = name;
+    }
 
     public String Name() {
         return name;
     }
 
+    public Entity getEquippedItem() {
+        return equipped;
+    }
+
     @Override
-    public void Behaviour(Event e) {
-        
-        if(e.ID.equals("equipItem"))
-        {
-            Object obj = e.Parameters.get("item");
-            if(obj instanceof Entity item)
-            {
-                Equipped = item;
-                System.out.println("equipped an item");
-            }
-        }
+    public boolean wantEvent(String eventId) {
+        return eventId.equals("equipItem")
+                || eventId.equals("unequipItem")
+                || eventId.equals("Defences")
+                || eventId.equals("attackWithLimb")
+                || eventId.equals("TickUpdate");
+    }
 
-        if(e.ID.equals("Defences"))
-        {
-            System.out.println("limb recieved Defences event");
-            Equipped.SendEvent(e);
-        }
-        if(e.ID.equals("attackWithLimb"))
-        {
-        
-                Object obj = e.Parameters.get("target");
-                if(obj instanceof Entity target)
-                {
-
-                    Event e1 = new Event();
-                    
-                    e1.ID = "DealDamage";
-                    e1.Parameters.put("target", target);
-                    if(Equipped == null)
-                    {
-                        System.out.println("cant attack with this limb, cos theres nothing equipped");
-                        return;
-                    }
-                    
-                    Equipped.SendEvent(e1);
+    @Override
+    public void handleEvent(Event e) {
+        switch (e.ID) {
+            case "equipItem" -> equipItem(e);
+            case "unequipItem" -> equipped = null;
+            case "TickUpdate" -> {
+                if (equipped != null) {
+                    equipped.SendEvent(new Event("TickUpdate"));
                 }
+            }
+            case "Defences" -> {
+                if (equipped != null) {
+                    equipped.SendEvent(e);
+                }
+            }
+            case "attackWithLimb" -> attackWithLimb(e);
         }
     }
 
-    
+    private void equipItem(Event e) {
+        Entity item = e.getParameter("item", Entity.class);
+        if (item != null && equipped == null) {
+            equipped = item;
+            System.out.println("equipped an item");
+        }
+    }
+
+    private void attackWithLimb(Event e) {
+        Entity target = e.getParameter("target", Entity.class);
+        if (target == null) {
+            return;
+        }
+        if (equipped == null) {
+            System.out.println("cant attack with this limb, cos theres nothing equipped");
+            return;
+        }
+
+        equipped.SendEvent(new Event("DealDamage").with("target", target));
+    }
 }

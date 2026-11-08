@@ -17,6 +17,11 @@ public class GameWorld {
         return Collections.unmodifiableList(entities);
     }
 
+    public boolean contains(Entity entity) {
+        return !pendingRemovals.contains(entity)
+                && (entities.contains(entity) || pendingAdds.contains(entity));
+    }
+
     public long countEntities(Predicate<Entity> predicate) {
         return entities.stream()
                 .filter(entity -> !pendingRemovals.contains(entity))
@@ -29,6 +34,11 @@ public class GameWorld {
     }
 
     public void spawn(Entity entity) {
+        pendingRemovals.remove(entity);
+        if (entities.contains(entity) || pendingAdds.contains(entity)) {
+            return;
+        }
+
         if (ticking) {
             pendingAdds.add(entity);
         } else {
@@ -37,6 +47,9 @@ public class GameWorld {
     }
 
     public void despawn(Entity entity) {
+        if (pendingAdds.remove(entity)) {
+            return;
+        }
         pendingRemovals.add(entity);
     }
 
