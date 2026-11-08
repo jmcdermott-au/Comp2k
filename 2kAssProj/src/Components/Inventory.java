@@ -94,17 +94,18 @@ public class Inventory extends Component {
         Entity item = e.getParameter("item", Entity.class);
         Limb target = e.getParameter("target", Limb.class);
         if (item == null || target == null || !items.contains(item)
-                || !belongsToOwner(target) || target.getEquippedItem() != null) {
+                || !belongsToOwner(target) || !target.canEquip(item)) {
             System.out.println("item could not be equipped");
             return;
         }
 
-        Event equipEvent = new Event("equipItem").with("item", item);
+        String eventId = item.getComponent(Armor.class) == null ? "equipItem" : "wearArmor";
+        Event equipEvent = new Event(eventId).with("item", item);
         if (!target.wantEvent(equipEvent.ID)) {
             return;
         }
         target.handleEvent(equipEvent);
-        if (target.getEquippedItem() == item) {
+        if (target.contains(item)) {
             items.remove(item);
         }
     }
@@ -116,17 +117,21 @@ public class Inventory extends Component {
             return;
         }
 
-        Entity item = target.getEquippedItem();
+        Entity item = e.getParameter("item", Entity.class);
+        if (item == null) {
+            item = target.getEquippedItem();
+            if (item == null) {
+                item = target.getWornArmor();
+            }
+        }
         if (item == null) {
             return;
         }
 
-        Event unequipEvent = new Event("unequipItem");
-        if (!target.wantEvent(unequipEvent.ID)) {
+        if (!target.contains(item)) {
             return;
         }
-        target.handleEvent(unequipEvent);
-        if (target.getEquippedItem() == null) {
+        if (target.unequip(item)) {
             addItem(item);
         }
     }
@@ -140,7 +145,7 @@ public class Inventory extends Component {
             return false;
         }
         for (Component component : self.components) {
-            if (component instanceof Limb limb && limb.getEquippedItem() == item) {
+            if (component instanceof Limb limb && limb.contains(item)) {
                 return true;
             }
         }

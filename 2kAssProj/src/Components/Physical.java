@@ -3,59 +3,48 @@ package Components;
 import Engine.Entity;
 import Engine.Event;
 
-public class Physical extends Component{
-
+public class Physical extends Component {
     public Physical() {
     }
 
-    
-    private int health;
+    private int health = 100;
 
     @Override
     public void Behaviour(Event e) {
+        if ("DealDamage".equals(e.ID)) {
+            Entity target = e.getParameter("target", Entity.class);
+            if (target == null || target.getComponent(Physical.class) == null) {
+                return;
+            }
 
-        
-        if(e.ID.equals("DealDamage"))
-        {
-
-                Entity target = e.getParameter("target", Entity.class);
-        
-                Event e2 = new Event();
-                e2.ID = "DealingDamage";
-                e2.Parameters.put("amount", 5); //default dmg value of 5 for physical obj
-                
-                self.SendEvent(e2);
-                Event e3 = new Event();
-                e3.ID = "TakeDamage";
-                e3.Parameters = e2.Parameters;
-                target.SendEvent(e3);
-            
+            Event damage = new Event("DealingDamage")
+                    .with("amount", 5)
+                    .with("target", target);
+            self.SendEvent(damage);
+            target.SendEvent(new Event("TakeDamage")
+                    .with("amount", damage.getParameter("amount", Integer.class)));
         }
 
-        if(e.ID.equals("TakeDamage"))
-        {
-            //bullshit to avoid having to order components
-            Event e1 = new Event();
-                e1.ID = "Defences";
-                e1.Parameters = e.Parameters;
-                self.SendEvent(e1);
-
-            if(e1.Parameters.containsKey("critChance"))
-            {
-                Integer critParam = e1.getParameter("critChance", Integer.class);
-                
+        if ("TakeDamage".equals(e.ID)) {
+            Integer amount = e.getParameter("amount", Integer.class);
+            if (amount == null) {
+                throw new IllegalArgumentException("TakeDamage event must include an integer amount");
             }
-            
-            System.out.println("PHYSICAL: " + health);
-            Integer number = e.getParameter("amount", Integer.class);
-            health -= number;
-            if(health <= 0)
-            {
-                Event e2 = new Event("Die");
-                self.SendEvent(e2);
+
+            Event defences = new Event("Defences")
+                    .with("amount", amount)
+                    .with("damageType", e.getParameter("damageType", String.class));
+            self.SendEvent(defences);
+
+            health -= defences.getParameter("amount", Integer.class);
+            if (health <= 0) {
                 self.getWorld().despawn(self);
             }
-            System.out.println("PHYSICAL: " +health);
         }
+
+    }
+
+    public int getHealth() {
+        return health;
     }
 }

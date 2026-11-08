@@ -2,6 +2,8 @@ package Components;
 
 import Engine.Entity;
 import Engine.Event;
+import java.util.Comparator;
+import java.util.List;
 
 public class Aggressive extends Component {
 
@@ -9,31 +11,38 @@ public class Aggressive extends Component {
     }
 
     @Override
-    public void Behaviour(Event e) {
-
-    }
-
-    @Override
     public void proposeGoals(Brain brain) {
-
-        Event nr = new Event("GetClosestEntity");
-        self.SendEvent(nr);
-        Entity nearest = nr.getParameter("Closest", Entity.class);
-        if (nearest != null) {
-            cPosition nrPos = nearest.getComponent(cPosition.class);
-            cPosition myPos = self.getComponent(cPosition.class);
-            if (nrPos.getX() == myPos.getX() && nrPos.getY() == myPos.getY()) {
-                Event e1 = new Event("DealDamage");
-                e1.Parameters.put("target", nearest);
-                brain.proposeGoal("hittem", 1, e1);
-            } else {
-                Event e2 = new Event("IwannaMoveHere");
-                e2.Parameters.put("location", nrPos);
-                brain.proposeGoal("moveHere", 1, e2);
-                System.out.println("DEBUG");
-            }
+        Vision vision = self.getComponent(Vision.class);
+        cPosition myPos = self.getComponent(cPosition.class);
+        if (vision == null || myPos == null) {
+            return;
         }
 
-    }
+        List<Entity> enemies = vision.getVisibleEntities().stream()
+                .filter(entity -> entity.getComponent(Enemy.class) != null)
+                .filter(entity -> entity.getComponent(cPosition.class) != null)
+                .toList();
+        Entity closestEnemy = enemies.stream()
+                .min(Comparator.comparingDouble(entity -> {
+                    cPosition position = entity.getComponent(cPosition.class);
+                    double dx = (double) position.getX() - myPos.getX();
+                    double dy = (double) position.getY() - myPos.getY();
+                    return dx * dx + dy * dy;
+                }))
+                .orElse(null);
+        if (closestEnemy == null) {
+            return;
+        }
 
+        cPosition enemyPosition = closestEnemy.getComponent(cPosition.class);
+        long dx = Math.abs((long) enemyPosition.getX() - myPos.getX());
+        long dy = Math.abs((long) enemyPosition.getY() - myPos.getY());
+        if (dx <= 1 && dy <= 1) {
+            Event attack = new Event("attackWithLimb").with("target", closestEnemy);
+            brain.proposeGoal("attackEnemy", 100, attack);
+        } else {
+            Event move = new Event("IwannaMoveHere").with("location", enemyPosition);
+            brain.proposeGoal("pursueEnemy", 50, move);
+        }
+    }
 }

@@ -1,12 +1,11 @@
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-
 import Components.Component;
 import Components.Renderable;
 import Components.cPosition;
 import Engine.Entity;
 import Engine.GameWorld;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 public class CGMoveASprite extends JFrame {
     private static final int TILE_SIZE = 16;
@@ -26,7 +25,7 @@ public class CGMoveASprite extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                    System.out.println("tick UPDATE!");
+                    //System.out.println("tick");
                     runGameTick();
                 }
             }

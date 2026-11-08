@@ -10,6 +10,7 @@ public class Seeds extends Component {
     private static final int BASE_SOFT_POPULATION_CAP = 10;
     private static final int FLOWERS_PER_FOOD = 2;
     private static final int MAX_FLOWER_POPULATION = 50;
+    private static final double SEED_SPREAD_CHANCE = 0.1;
 
     public Seeds(GameWorld world, EntityFactory factory) {
         this.world = world;
@@ -32,6 +33,10 @@ public class Seeds extends Component {
     }
 
     private void handleSprouting(Event e) {
+        if (ThreadLocalRandom.current().nextDouble() >= SEED_SPREAD_CHANCE) {
+            return;
+        }
+
         long flowerPopulation = world.countEntities(entity -> entity.getComponent(Flower.class) != null);
         if (flowerPopulation >= MAX_FLOWER_POPULATION) {
             return;

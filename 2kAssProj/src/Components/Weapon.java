@@ -5,9 +5,13 @@ import Engine.Event;
 public class Weapon extends Component {
 
     public Weapon() {
+        this(5, "default");
     }
 
     public Weapon(int dmg, String nam) {
+        if (dmg < 0) {
+            throw new IllegalArgumentException("Weapon damage must be non-negative");
+        }
         wepDamage = dmg;
         name = nam;
     }
@@ -35,6 +39,7 @@ public class Weapon extends Component {
         e.Parameters.put(
                 "critChance",
                 existingCritChance == null ? critChance : existingCritChance + critChance);
+
     }
 
 }
