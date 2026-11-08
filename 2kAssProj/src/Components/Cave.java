@@ -32,7 +32,10 @@ public class Cave extends Component {
         }
         ticksUntilSpawn = SPAWN_INTERVAL_TICKS;
 
-        if (world.countEntities(entity -> entity.getComponent(Enemy.class) != null)
+        if (world.countEntities(entity -> {
+                    Faction faction = entity.getComponent(Faction.class);
+                    return faction != null && faction.getId() == Faction.Id.ENEMY;
+                })
                 >= MAX_ENEMY_POPULATION) {
             return;
         }

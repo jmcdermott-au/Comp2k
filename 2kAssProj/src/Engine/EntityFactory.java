@@ -7,13 +7,15 @@ import Components.Armor;
 import Components.Brain;
 import Components.Burning;
 import Components.Cave;
-import Components.Enemy;
+import Components.Faction;
+import Components.EntityInterest;
 import Components.FireArmor;
 import Components.Flower;
 import Components.Food.Eater;
 import Components.Food.Edible;
 import Components.Food.Rottable;
 import Components.Inventory;
+import Components.InterestingEntitySeeker;
 import Components.InflictsBurning;
 import Components.Limb;
 import Components.Physical;
@@ -21,10 +23,12 @@ import Components.Renderable;
 import Components.ScaredBrain;
 import Components.Seeds;
 import Components.Vision;
+import Components.Village;
 import Components.Weapon;
 import Components.cPosition;
 import java.awt.Color;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class EntityFactory {
         public enum Type {
@@ -35,9 +39,12 @@ public class EntityFactory {
                 ANT,
                 ANT_HILL,
                 CAVE,
+                CAMPFIRE,
+                VILLAGE,
                 ANGRY_CREATURE,
                 ARMED_CREATURE,
                 FIRE_SWORD,
+                ARMOR,
                 FIRE_ARMOR
         }
 
@@ -57,6 +64,8 @@ public class EntityFactory {
                                         .withComponent(new Renderable(16, 16, Color.BLUE))
                                         .withComponent(new Vision(world, 100))
                                         .withComponent(new Eater())
+                                        .withComponent(new EntityInterest(6))
+                                        .withComponent(new InterestingEntitySeeker())
                                         .withComponent(new Brain());
 
                         case FOOD -> entity
@@ -92,7 +101,17 @@ public class EntityFactory {
                         case CAVE -> entity
                                         .withComponent(new Physical())
                                         .withComponent(new Renderable(16, 16, Color.DARK_GRAY))
+                                        .withComponent(new EntityInterest(2))
                                         .withComponent(new Cave(world, this));
+
+                        case CAMPFIRE -> entity
+                                        .withComponent(new Renderable(16, 16, Color.RED))
+                                        .withComponent(new EntityInterest(10));
+
+                        case VILLAGE -> entity
+                                        .withComponent(new Physical())
+                                        .withComponent(new Renderable(16, 16, Color.YELLOW))
+                                        .withComponent(new Village(world, this));
 
                         case ANGRY_CREATURE -> {
                                 entity
@@ -101,10 +120,17 @@ public class EntityFactory {
                                                 .withComponent(new Renderable(16, 16, Color.MAGENTA))
                                                 .withComponent(new Vision(world, 100))
                                                 .withComponent(new Brain())
+                                                .withComponent(new Aggressive(Faction.Id.ARMED))
                                                 .withComponent(new Eater())
-                                                .withComponent(new Enemy());
+                                                .withComponent(new Faction(Faction.Id.ENEMY));
+                                Entity armor = create(
+                                                ThreadLocalRandom.current().nextBoolean()
+                                                                ? Type.ARMOR
+                                                                : Type.FIRE_ARMOR,
+                                                0,
+                                                0);
                                 equipItems(entity, new Entity(world)
-                                                .withComponent(new Weapon(10, "sword")));
+                                                .withComponent(new Weapon(10, "sword")), armor);
                         }
 
                         case ARMED_CREATURE -> addEquipment(entity);
@@ -115,6 +141,9 @@ public class EntityFactory {
 
                         case FIRE_ARMOR -> entity
                                         .withComponent(new FireArmor(5, "fire armor"));
+
+                        case ARMOR -> entity
+                                        .withComponent(new Armor(5, "armor"));
                 }
 
                 return entity;
@@ -126,15 +155,18 @@ public class EntityFactory {
                                 .withComponent(new Renderable(16, 16, Color.GRAY))
                                 .withComponent(new Vision(world, 100))
                                 .withComponent(new Brain())
-                                .withComponent(new Aggressive());
-                equipItems(creature, create(Type.FIRE_SWORD, 0, 0));
+                                .withComponent(new Aggressive())
+                                .withComponent(new Faction(Faction.Id.ARMED));
+                equipItems(
+                                creature,
+                                create(Type.FIRE_SWORD, 0, 0),
+                                create(Type.ARMOR, 0, 0));
         }
 
-        private void equipItems(Entity creature, Entity weapon) {
+        private void equipItems(Entity creature, Entity weapon, Entity armor) {
                 Limb leftArm = new Limb("left arm");
                 Limb rightArm = new Limb("right arm");
                 Inventory inventory = new Inventory();
-                Entity armor = new Entity(world).withComponent(new Armor(5, "armor"));
 
                 creature
                                 .withComponent(inventory)

@@ -4,10 +4,17 @@ import Engine.Entity;
 import Engine.Event;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public class Aggressive extends Component {
+    private final Faction.Id targetFaction;
 
     public Aggressive() {
+        this(Faction.Id.ENEMY);
+    }
+
+    public Aggressive(Faction.Id targetFaction) {
+        this.targetFaction = Objects.requireNonNull(targetFaction, "Target faction cannot be null");
     }
 
     @Override
@@ -19,7 +26,10 @@ public class Aggressive extends Component {
         }
 
         List<Entity> enemies = vision.getVisibleEntities().stream()
-                .filter(entity -> entity.getComponent(Enemy.class) != null)
+                .filter(entity -> {
+                    Faction faction = entity.getComponent(Faction.class);
+                    return faction != null && faction.getId() == targetFaction;
+                })
                 .filter(entity -> entity.getComponent(cPosition.class) != null)
                 .toList();
         Entity closestEnemy = enemies.stream()

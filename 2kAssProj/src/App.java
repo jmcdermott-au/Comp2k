@@ -14,6 +14,8 @@ public class App {
 
         world.spawn(entityFactory.create(EntityFactory.Type.ANT_HILL, 25, 25));
         world.spawn(entityFactory.create(EntityFactory.Type.CAVE, 40, 40));
+        world.spawn(entityFactory.create(EntityFactory.Type.CAMPFIRE, 15, 10));
+        world.spawn(entityFactory.create(EntityFactory.Type.VILLAGE, 10, 10));
         world.spawn(entityFactory.create(EntityFactory.Type.ARMED_CREATURE, 25, 35));
 
         world.spawn(entityFactory.create(EntityFactory.Type.ANGRY_CREATURE, 33, 33));

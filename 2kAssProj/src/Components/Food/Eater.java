@@ -115,6 +115,10 @@ public class Eater extends Component {
         return satiety;
     }
 
+    public boolean isHungry() {
+        return satiety < apetite;
+    }
+
     private void setSatiety(int x) {
         if (x > capacity) {
             sendDamageEvent(x - capacity);
